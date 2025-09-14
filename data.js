@@ -62,8 +62,32 @@ export const menuData = {
         { id: 'sf7', name: 'Sprite', price: 0 }
     ],
     combos: [
-        { id: 'c1', name: 'Combo Básico', description: '1 Tachitte Tradicional (Peixe ou Frango) + 1 Refrigerante Lata.', img: 'images/combo-basico.png', price: 20.00, type: 'combo' },
-        { id: 'c2', name: 'Combo Premium', description: '1 Tachitte de Bacon + 1 Suco natural de Morango.', img: 'images/combo-premium.png', price: 25.00, type: 'combo' }
+        { 
+            id: 'c1', 
+            name: 'Combo Básico', 
+            description: '1 Tachitte Tradicional + 1 Refrigerante Lata. Personalize o tamanho do tachitte, adicione molhos e escolha o sabor do refri!', 
+            img: 'images/combo-basico.png', 
+            price: 20.00, 
+            type: 'combo', 
+            isCustomizableCombo: true,
+            comboItems: {
+                tachitte: { id: 't1', type: 'salty', canChooseProtein: true, basePrice: 15.00 },
+                bebida: { id: 'b7', type: 'refri', canChooseFlavor: true, basePrice: 6.00 }
+            }
+        },
+        { 
+            id: 'c2', 
+            name: 'Combo Premium', 
+            description: '1 Tachitte de Bacon + 1 Suco natural de Morango. Personalize o tamanho do tachitte e adicione molhos!', 
+            img: 'images/combo-premium.png', 
+            price: 25.00, 
+            type: 'combo', 
+            isCustomizableCombo: true,
+            comboItems: {
+                tachitte: { id: 't2', type: 'salty', canChooseProtein: false, basePrice: 18.00 },
+                bebida: { id: 'b4', type: 'suco', canChooseFlavor: false, basePrice: 8.00 }
+            }
+        }
     ],
     sizes: [
         { id: 's1', name: 'Pequeno', description: '(6 pedaços)', price: 0 },
