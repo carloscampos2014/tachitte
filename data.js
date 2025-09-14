@@ -34,6 +34,9 @@ export const menuData = {
 
 // Configurações do App
 export const settings = {
-    whatsappNumber: '5511996747477', // Substitua pelo seu número de telefone do WhatsApp
+    whatsappNumber: '11996747477', // Substitua pelo seu número de telefone do WhatsApp
     deliveryFee: 5.00,
+    pixKey: '+5511996747477', // Substitua pela sua chave pix (pode ser e-mail, telefone, CPF/CNPJ, etc.)
+    pixName: 'Carlos Campos',
+    pixCity: 'Guarulhos'
 };

@@ -12,6 +12,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Icones Lucide -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Biblioteca para gerar QR Code do Pix -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+
     <style>
         /* Estilos personalizados para o PWA */
         body {
@@ -82,6 +85,24 @@
                 flex-direction: column;
                 text-align: center;
             }
+        }
+        /* Novo estilo para organizar as opções de pagamento no modal */
+        .payment-options-container {
+            display: grid;
+            gap: 1rem;
+        }
+        .payment-options-container > div {
+            border: 1px solid #fca5a5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        .payment-options-container .payment-method-radio:checked + span {
+            font-weight: bold;
+        }
+        .payment-options-container > div.active {
+            background-color: #fef2f2;
+            border-color: #dc2626;
         }
     </style>
 </head>
@@ -225,46 +246,62 @@
             <div class="space-y-4">
                 <div>
                     <h3 class="font-bold text-red-900 mb-2">Forma de Pagamento</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <label class="payment-method-label flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
-                            <input type="radio" name="payment-method" value="PIX" class="payment-method-radio accent-red-500" checked>
-                            <span>PIX</span>
-                        </label>
-                        <label id="card-option" class="payment-method-label flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
-                            <input type="radio" name="payment-method" value="Cartões" class="payment-method-radio accent-red-500">
-                            <span>Cartões</span>
-                        </label>
-                        <label id="money-option" class="payment-method-label flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
-                            <input type="radio" name="payment-method" value="Dinheiro" class="payment-method-radio accent-red-500">
-                            <span>Dinheiro</span>
-                        </label>
+                    <div class="payment-options-container">
+                        <div id="pix-payment-option" class="p-3 border border-red-300 rounded-lg cursor-pointer active">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="payment-method" value="PIX" class="payment-method-radio accent-red-500" checked>
+                                <span>PIX</span>
+                            </label>
+                            <div id="pix-info-container" class="mt-4 space-y-4">
+                                <p class="text-center text-sm text-red-600">Escaneie o QR Code ou copie a chave para pagar.</p>
+                                <div class="flex flex-col items-center">
+                                    <div id="qrcode-pix" class="p-2 bg-white rounded-md"></div>
+                                    <button id="copy-pix-key" class="mt-2 text-sm text-white bg-red-500 hover:bg-red-600 py-1 px-3 rounded-full">
+                                        Copiar Chave Pix
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="card-payment-option" class="p-3 border border-red-300 rounded-lg cursor-pointer">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="payment-method" value="Cartões" class="payment-method-radio accent-red-500">
+                                <span>Cartões</span>
+                            </label>
+                            <div id="card-sub-options" class="mt-4 space-y-2 pl-4">
+                                <h4 class="font-bold text-red-800">Tipo de Cartão</h4>
+                                <div class="flex items-center space-x-2">
+                                    <input type="radio" name="card-type" value="Crédito" class="card-type-radio accent-red-500" checked>
+                                    <span>Crédito</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="radio" name="card-type" value="Débito" class="card-type-radio accent-red-500">
+                                    <span>Débito</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="radio" name="card-type" value="Refeição" class="card-type-radio accent-red-500">
+                                    <span>Refeição</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <input type="radio" name="card-type" value="Alimentação" class="card-type-radio accent-red-500">
+                                    <span>Alimentação</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="money-payment-option" class="p-3 border border-red-300 rounded-lg cursor-pointer">
+                            <label class="flex items-center space-x-2 cursor-pointer">
+                                <input type="radio" name="payment-method" value="Dinheiro" class="payment-method-radio accent-red-500">
+                                <span>Dinheiro</span>
+                            </label>
+                            <div id="money-change-options" class="mt-4 space-y-4 pl-4">
+                                <h4 class="font-bold text-red-800">Troco para quanto?</h4>
+                                <div>
+                                    <label for="money-value" class="block text-sm font-medium text-red-900">Valor do dinheiro</label>
+                                    <input type="number" id="money-value" class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-2" placeholder="Ex: 50.00" min="0">
+                                </div>
+                                <p id="change-value" class="text-sm font-medium text-red-900"></p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div id="card-sub-options" class="space-y-2 pl-4 hidden">
-                    <div class="flex items-center space-x-2">
-                        <input type="radio" name="card-type" value="Crédito" class="card-type-radio accent-red-500" checked>
-                        <span>Crédito</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="radio" name="card-type" value="Débito" class="card-type-radio accent-red-500">
-                        <span>Débito</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="radio" name="card-type" value="Refeição" class="card-type-radio accent-red-500">
-                        <span>Refeição</span>
-                    </div>
-                    <div class="flex items-center space-x-2">
-                        <input type="radio" name="card-type" value="Alimentação" class="card-type-radio accent-red-500">
-                        <span>Alimentação</span>
-                    </div>
-                </div>
-                <div id="money-change-options" class="space-y-4 hidden">
-                    <h3 class="font-bold text-red-900">Troco para quanto?</h3>
-                    <div>
-                        <label for="money-value" class="block text-sm font-medium text-red-900">Valor do dinheiro</label>
-                        <input type="number" id="money-value" class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-2" placeholder="Ex: 50.00" min="0">
-                    </div>
-                    <p id="change-value" class="text-sm font-medium text-red-900"></p>
                 </div>
                 <div id="delivery-info" class="space-y-4 hidden">
                     <h3 class="font-bold text-red-900">Dados para Entrega</h3>
@@ -288,6 +325,50 @@
 
     <script type="module">
         import { menuData, settings } from './data.js';
+
+        // --- Funções para Geração do PIX Payload sem biblioteca ---
+        // Calcula o CRC16 para o payload do Pix
+        function CRC16_CCITT_calc(str) {
+            let crc = 0xFFFF;
+            for (let i = 0; i < str.length; i++) {
+                crc ^= (str.charCodeAt(i) << 8);
+                for (let j = 0; j < 8; j++) {
+                    crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : (crc << 1);
+                }
+            }
+            return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+        }
+
+        // Formata o ID do campo e o valor para o padrão EMV
+        function formatEMV(id, value) {
+            const len = String(value.length).padStart(2, '0');
+            return `${id}${len}${value}`;
+        }
+
+        // Constrói o payload completo do Pix
+        function getPixPayload(amount) {
+            const txid = `TXID${Date.now()}`; // Gerando um identificador de transação único
+            
+            const payload = [
+                formatEMV('00', '01'), // Payload Format Indicator
+                formatEMV('26', [
+                    formatEMV('00', 'br.gov.bcb.pix'), // Merchant Account Information
+                    formatEMV('01', settings.pixKey) // Pix Key
+                ].join('')),
+                formatEMV('52', '0000'), // Merchant Category Code (MCC)
+                formatEMV('53', '986'),  // Transaction Currency (BRL)
+                formatEMV('54', amount.toFixed(2)), // Transaction Amount
+                formatEMV('58', 'BR'), // Country Code
+                formatEMV('59', settings.pixName), // Merchant Name
+                formatEMV('60', settings.pixCity), // Merchant City
+                formatEMV('62', formatEMV('05', txid)), // Transaction ID agora é dinâmico
+            ].join('');
+
+            const crc16 = CRC16_CCITT_calc(payload + '6304');
+            return payload + '6304' + crc16;
+        }
+        // --- Fim das funções para Geração do PIX Payload sem biblioteca ---
+
 
         // Estado global do app
         const state = {
@@ -324,7 +405,10 @@
         const moneyChangeOptionsDiv = document.getElementById('money-change-options');
         const moneyValueInput = document.getElementById('money-value');
         const changeValueP = document.getElementById('change-value');
-        
+        const pixInfoContainer = document.getElementById('pix-info-container');
+        const qrcodePixDiv = document.getElementById('qrcode-pix');
+        const copyPixKeyButton = document.getElementById('copy-pix-key');
+
         // Elementos de rádio
         const paymentMethodRadios = document.querySelectorAll('.payment-method-radio');
 
@@ -485,8 +569,6 @@
             moneyValueInput.value = '';
             changeValueP.textContent = '';
             document.querySelector('input[name="payment-method"][value="PIX"]').checked = true;
-            cardSubOptionsDiv.classList.add('hidden');
-            moneyChangeOptionsDiv.classList.add('hidden');
             
             // Redefine a opção de pedido para Retirar
             state.isDelivery = false;
@@ -494,6 +576,24 @@
             deliveryOptionBtn.classList.remove('border-red-500', 'bg-red-500', 'text-white');
             pickupOptionBtn.classList.remove('border-red-300', 'bg-white', 'text-red-800');
             deliveryOptionBtn.classList.add('border-red-300', 'bg-white', 'text-red-800');
+            
+            // Remove a classe 'active' de todos os contêineres de pagamento e adiciona ao PIX
+            document.querySelectorAll('.payment-options-container > div').forEach(div => div.classList.remove('active'));
+            document.getElementById('pix-payment-option').classList.add('active');
+            
+            // Esconde todas as sub-opções
+            pixInfoContainer.classList.add('hidden');
+            cardSubOptionsDiv.classList.add('hidden');
+            moneyChangeOptionsDiv.classList.add('hidden');
+        }
+        
+        // Gera o QR Code do Pix
+        function generatePixQRCode(amount) {
+            const payload = getPixPayload(amount);
+            
+            // Limpa o container e gera o novo QR Code
+            qrcodePixDiv.innerHTML = '';
+            new QRCode(qrcodePixDiv, payload);
         }
 
         // Manipuladores de eventos
@@ -538,6 +638,18 @@
                     deliveryInfoDiv.classList.add('hidden');
                 }
                 checkoutModal.classList.remove('hidden');
+                // Inicializa o estado do modal de checkout
+                const currentTotal = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
+                if (document.querySelector('input[name="payment-method"]:checked').value === 'PIX') {
+                     generatePixQRCode(currentTotal);
+                     pixInfoContainer.classList.remove('hidden');
+                     cardSubOptionsDiv.classList.add('hidden');
+                     moneyChangeOptionsDiv.classList.add('hidden');
+                }
+            }
+            if (e.target.closest('#close-checkout-modal')) {
+                checkoutModal.classList.add('hidden');
+                resetCheckoutForm();
             }
             
             // Alterar quantidade no carrinho
@@ -672,19 +784,26 @@
                 showTab('bebidas-menu');
             }
             
-            // Mostrar/ocultar sub-opções de pagamento
-            if (e.target.closest('.payment-method-radio[value="Cartões"]')) {
+            // Lógica para selecionar a opção de pagamento e ativar a classe 'active' e mostrar as sub-opções
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+            pixInfoContainer.classList.add('hidden');
+            cardSubOptionsDiv.classList.add('hidden');
+            moneyChangeOptionsDiv.classList.add('hidden');
+            
+            if (paymentMethod === 'PIX') {
+                pixInfoContainer.classList.remove('hidden');
+                const currentTotal = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
+                generatePixQRCode(currentTotal);
+            } else if (paymentMethod === 'Cartões') {
                 cardSubOptionsDiv.classList.remove('hidden');
-                moneyChangeOptionsDiv.classList.add('hidden');
-                // Reseta o campo de troco ao mudar
-                moneyValueInput.value = '';
-                changeValueP.textContent = '';
-            } else if (e.target.closest('.payment-method-radio[value="Dinheiro"]')) {
+            } else if (paymentMethod === 'Dinheiro') {
                 moneyChangeOptionsDiv.classList.remove('hidden');
-                cardSubOptionsDiv.classList.add('hidden');
-            } else {
-                cardSubOptionsDiv.classList.add('hidden');
-                moneyChangeOptionsDiv.classList.add('hidden');
+            }
+            
+            const paymentOptionContainer = e.target.closest('.payment-options-container > div');
+            if (paymentOptionContainer) {
+                 document.querySelectorAll('.payment-options-container > div').forEach(div => div.classList.remove('active'));
+                 paymentOptionContainer.classList.add('active');
             }
         });
         
@@ -704,27 +823,72 @@
                 changeValueP.textContent = '';
             }
         });
-        
+
         // Adiciona um listener para o modal de checkout para impedir o fechamento em cliques internos
         checkoutModal.addEventListener('click', (e) => {
-             // Se o clique for no botão de fechar, fecha o modal
             if (e.target.closest('#close-checkout-modal')) {
                 checkoutModal.classList.add('hidden');
                 resetCheckoutForm();
                 return;
             }
-            // Se o clique for no overlay (fundo escuro), fecha o modal
             if (e.target === checkoutModal) {
                 checkoutModal.classList.add('hidden');
                 resetCheckoutForm();
                 return;
             }
-            // Impede a propagação do evento para inputs e botões dentro do modal
-            if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'button') {
-                e.stopPropagation();
+            // Lógica para alternar a classe 'active' ao clicar em um contêiner de pagamento
+            const paymentOptionContainer = e.target.closest('.payment-options-container > div');
+            if (paymentOptionContainer) {
+                 document.querySelectorAll('.payment-options-container > div').forEach(div => div.classList.remove('active'));
+                 paymentOptionContainer.classList.add('active');
+                 const radioButton = paymentOptionContainer.querySelector('.payment-method-radio');
+                 if (radioButton) {
+                    radioButton.checked = true;
+                    // Força a execução da lógica de sub-opções
+                    const event = new Event('change');
+                    radioButton.dispatchEvent(event);
+                 }
             }
         });
+        
+        // Listener para os inputs de rádio, para alternar a classe 'active' e mostrar sub-opções
+        document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                // Remove a classe 'active' de todos
+                document.querySelectorAll('.payment-options-container > div').forEach(div => div.classList.remove('active'));
+                // Adiciona a classe 'active' no elemento pai do radio clicado
+                e.target.closest('.payment-options-container > div').classList.add('active');
 
+                // Esconde todas as sub-opções
+                pixInfoContainer.classList.add('hidden');
+                cardSubOptionsDiv.classList.add('hidden');
+                moneyChangeOptionsDiv.classList.add('hidden');
+                
+                const selectedPaymentMethod = e.target.value;
+                if (selectedPaymentMethod === 'PIX') {
+                    pixInfoContainer.classList.remove('hidden');
+                    const currentTotal = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
+                    generatePixQRCode(currentTotal);
+                } else if (selectedPaymentMethod === 'Cartões') {
+                    cardSubOptionsDiv.classList.remove('hidden');
+                } else if (selectedPaymentMethod === 'Dinheiro') {
+                    moneyChangeOptionsDiv.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Listener para o botão de copiar a chave Pix
+        copyPixKeyButton.addEventListener('click', () => {
+            const currentTotal = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
+            const payload = getPixPayload(currentTotal);
+            
+            navigator.clipboard.writeText(payload).then(() => {
+                showStatusMessage('Chave Pix copiada para a área de transferência!');
+            }).catch(err => {
+                console.error('Falha ao copiar a chave Pix:', err);
+                showStatusMessage('Erro ao copiar a chave Pix.', 'error');
+            });
+        });
 
         // Inicializa a aplicação e registra o Service Worker
         document.addEventListener('DOMContentLoaded', () => {
