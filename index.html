@@ -130,7 +130,7 @@
             <div class="about-tachitte">
                 <img src="images/tradicional.png" alt="Tachitte Tradicional" class="w-full md:w-auto h-auto object-cover rounded-md flex-shrink-0">
                 <p class="text-red-800 leading-relaxed text-center md:text-left">
-                    Descubra o Tachitte, a nossa versão aprimorada do sushi! Mais do que um simples enrolado, o Tachitte é uma experiência completa: <b>maior</b>, <b>mais recheado</b> e irresistivelmente saboroso. Nossa receita base é feita com <b>arroz</b>, <b>alga</b>, <b>cenoura</b> e uma proteína suculenta (<b>peixe</b> ou <b>carne</b>), criando a tela perfeita para as mais variadas combinações de sabores. Venha se surpreender!
+                    Descubra o Tachitte, a nossa versão aprimorada do sushi! Mais do que um simples enrolado, o Tachitte é uma experiência completa: <b>maior</b>, <b>mais recheado</b> e irresistivelmente saboroso. Nossa receita base é feita com <b>arroz</b>, <b>alga</b>, <b>cenoura</b> e uma proteína suculenta, criando a tela perfeita para as mais variadas combinações de sabores. Venha se surpreender!
                 </p>
             </div>
         </div>
@@ -139,10 +139,14 @@
         <div class="bg-white p-4 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-bold mb-4 text-red-600 text-center">Escolha a opção de pedido</h2>
             <div class="flex space-x-4">
-                <button id="delivery-option" class="flex-1 py-3 px-4 rounded-full border border-red-300 text-red-800 bg-white hover:bg-red-100 transition-colors">
+                <!-- Botão de Entrega com ícone -->
+                <button id="delivery-option" class="flex-1 flex items-center justify-center py-3 px-4 rounded-full border border-red-300 text-red-800 bg-white hover:bg-red-100 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck mr-2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18h6"/><path d="M22 13V6a2 2 0 0 0-2-2h-8a2 2 0 0 0-2 2v7"/><path d="M7.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/><path d="M17.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>
                     Entrega
                 </button>
-                <button id="pickup-option" class="flex-1 py-3 px-4 rounded-full border border-red-500 text-white bg-red-500 hover:bg-red-600 transition-colors">
+                <!-- Botão de Retirada com ícone -->
+                <button id="pickup-option" class="flex-1 flex items-center justify-center py-3 px-4 rounded-full border border-red-500 text-white bg-red-500 hover:bg-red-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-bag mr-2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" x2="21" y1="6" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
                     Retirar
                 </button>
             </div>
@@ -156,7 +160,8 @@
             <div class="flex border-b border-red-300">
                 <button id="salgados-tab" class="tab-button flex-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors rounded-tl-lg active">Salgados</button>
                 <button id="doces-tab" class="tab-button flex-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors">Doces</button>
-                <button id="bebidas-tab" class="tab-button flex-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors rounded-tr-lg">Bebidas</button>
+                <button id="bebidas-tab" class="tab-button flex-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors">Bebidas</button>
+                <button id="combos-tab" class="tab-button flex-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors rounded-tr-lg">Combos</button>
             </div>
         </div>
 
@@ -182,6 +187,13 @@
             </div>
         </section>
 
+        <section id="combos-menu" class="menu-tab hidden">
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Combos</h2>
+            <div id="combos-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Itens de combos serão inseridos aqui pelo JavaScript -->
+            </div>
+        </section>
+
     </main>
     
     <!-- Aviso de Conteúdo Fictício -->
@@ -190,7 +202,7 @@
     </div>
 
     <!-- Modal do Carrinho -->
-    <div id="cart-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+    <div id="cart-modal" class="modal fixed inset-0 flex items-center justify-y-end p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
                 <h2 class="text-2xl font-bold text-red-900">Seu Carrinho</h2>
@@ -212,6 +224,119 @@
             </div>
         </div>
     </div>
+    
+    <!-- Novo Modal de Escolha de Tamanho -->
+    <div id="size-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-red-900">Escolha o Tamanho</h2>
+                <button id="close-size-choice-modal" class="text-red-400 hover:text-red-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="size-options" class="space-y-4">
+                <!-- Opções de tamanho serão inseridas aqui via JS -->
+            </div>
+            <div class="border-t pt-4 mt-4">
+                <button id="next-size-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    Próximo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal para Escolha de Proteína -->
+    <div id="protein-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-red-900">Escolha a Proteína</h2>
+                <button id="close-protein-choice-modal" class="text-red-400 hover:text-red-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                    <input type="radio" name="protein" id="protein-peixe" value="Peixe" class="accent-red-500">
+                    <label for="protein-peixe" class="text-lg">Peixe</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" name="protein" id="protein-carne" value="Carne" class="accent-red-500">
+                    <label for="protein-carne" class="text-lg">Carne</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" name="protein" id="protein-frango" value="Frango" class="accent-red-500">
+                    <label for="protein-frango" class="text-lg">Frango</label>
+                </div>
+            </div>
+            <div class="border-t pt-4 mt-4">
+                <button id="next-protein-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    Próximo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal para Toppings Doces -->
+    <div id="sweet-toppings-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-red-900">Escolha as Coberturas</h2>
+                <button id="close-sweet-toppings-choice-modal" class="text-red-400 hover:text-red-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <p class="text-sm text-red-600 mb-4">Selecione as coberturas adicionais para o seu tachitte doce.</p>
+            <div id="sweet-toppings-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                <!-- Toppings doces serão inseridos aqui pelo JavaScript -->
+            </div>
+            <div class="border-t pt-4">
+                <button id="add-sweet-toppings-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal para Toppings Salgados -->
+    <div id="toppings-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-red-900">Escolha os Toppings</h2>
+                <button id="close-toppings-choice-modal" class="text-red-400 hover:text-red-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <p class="text-sm text-red-600 mb-4">Selecione as coberturas adicionais para o seu tachitte.</p>
+            <div id="toppings-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                <!-- Toppings serão inseridos aqui pelo JavaScript -->
+            </div>
+            <div class="border-t pt-4">
+                <button id="add-toppings-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal para Escolha de Sabor do Refrigerante -->
+    <div id="soda-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-red-900">Escolha o Sabor</h2>
+                <button id="close-soda-choice-modal" class="text-red-400 hover:text-red-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="soda-flavors-list" class="space-y-4">
+                <!-- Sabores de refrigerante serão inseridos aqui via JS -->
+            </div>
+            <div class="border-t pt-4 mt-4">
+                <button id="add-soda-flavor-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal de Customização do Tachitte -->
     <div id="customize-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
@@ -227,7 +352,28 @@
                 <!-- Ingredientes serão inseridos aqui pelo JavaScript -->
             </div>
             <div class="border-t pt-4">
-                <button id="add-custom-tachitte-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                <button id="next-custom-toppings-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    Próximo
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Novo Modal para Molhos do Customizado -->
+    <div id="custom-toppings-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-red-900">Escolha os Molhos</h2>
+                <button id="close-custom-toppings-modal" class="text-red-400 hover:text-red-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <p class="text-sm text-red-600 mb-4">Selecione até 2 molhos para o seu tachitte customizado.</p>
+            <div id="custom-toppings-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                <!-- Molhos serão inseridos aqui pelo JavaScript -->
+            </div>
+            <div class="border-t pt-4">
+                <button id="add-custom-final-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
                     Adicionar ao Carrinho
                 </button>
             </div>
@@ -374,13 +520,20 @@
         const state = {
             cart: [],
             isDelivery: false,
-            deliveryFee: settings.deliveryFee
+            deliveryFee: settings.deliveryFee,
+            selectedItem: null,
+            selectedSize: null,
+            selectedProtein: null,
+            selectedToppings: [],
+            selectedSweetToppings: [],
+            selectedSodaFlavor: null
         };
 
         // Seletores do DOM
         const tachittesList = document.getElementById('salgados-list');
         const docesList = document.getElementById('doces-list');
         const bebidasList = document.getElementById('bebidas-list');
+        const combosList = document.getElementById('combos-list');
         const cartButton = document.getElementById('cart-button');
         const cartCount = document.getElementById('cart-count');
         const cartModal = document.getElementById('cart-modal');
@@ -409,6 +562,31 @@
         const qrcodePixDiv = document.getElementById('qrcode-pix');
         const copyPixKeyButton = document.getElementById('copy-pix-key');
 
+        // Novos seletores para os novos modais
+        const sizeChoiceModal = document.getElementById('size-choice-modal');
+        const sizeOptionsDiv = document.getElementById('size-options');
+        const closeSizeChoiceModal = document.getElementById('close-size-choice-modal');
+        const nextSizeButton = document.getElementById('next-size-button');
+        const proteinChoiceModal = document.getElementById('protein-choice-modal');
+        const closeProteinChoiceModal = document.getElementById('close-protein-choice-modal');
+        const nextProteinButton = document.getElementById('next-protein-button');
+        const toppingsChoiceModal = document.getElementById('toppings-choice-modal');
+        const toppingsListDiv = document.getElementById('toppings-list');
+        const closeToppingsChoiceModal = document.getElementById('close-toppings-choice-modal');
+        const addToppingsButton = document.getElementById('add-toppings-button');
+        const sweetToppingsChoiceModal = document.getElementById('sweet-toppings-choice-modal');
+        const sweetToppingsListDiv = document.getElementById('sweet-toppings-list');
+        const closeSweetToppingsChoiceModal = document.getElementById('close-sweet-toppings-choice-modal');
+        const addSweetToppingsButton = document.getElementById('add-sweet-toppings-button');
+        const sodaChoiceModal = document.getElementById('soda-choice-modal');
+        const sodaFlavorsListDiv = document.getElementById('soda-flavors-list');
+        const closeSodaChoiceModal = document.getElementById('close-soda-choice-modal');
+        const addSodaFlavorButton = document.getElementById('add-soda-flavor-button');
+        const customToppingsModal = document.getElementById('custom-toppings-modal');
+        const customToppingsList = document.getElementById('custom-toppings-list');
+        const closeCustomToppingsModal = document.getElementById('close-custom-toppings-modal');
+        const addCustomFinalButton = document.getElementById('add-custom-final-button');
+        
         // Elementos de rádio
         const paymentMethodRadios = document.querySelectorAll('.payment-method-radio');
 
@@ -440,7 +618,7 @@
                     </div>
                     <div class="flex items-center justify-between mt-auto">
                         <span class="text-xl font-bold text-red-600">R$ ${item.price.toFixed(2)}</span>
-                        <button class="add-to-cart-btn bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors" data-id="${item.id}" data-custom="${item.isCustom || false}">
+                        <button class="add-to-cart-btn bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors" data-id="${item.id}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                         </button>
                     </div>
@@ -454,18 +632,78 @@
             tachittesList.innerHTML = '';
             docesList.innerHTML = '';
             bebidasList.innerHTML = '';
-            
+            combosList.innerHTML = '';
+
             menuData.tachittes.filter(item => item.type === 'salty').forEach(item => renderMenuItem(item, tachittesList));
             menuData.tachittes.filter(item => item.type === 'sweet').forEach(item => renderMenuItem(item, docesList));
             menuData.bebidas.forEach(item => renderMenuItem(item, bebidasList));
+            menuData.combos.forEach(item => renderMenuItem(item, combosList));
         }
 
-        // Função para renderizar os ingredientes no modal de customização
+        // Função para renderizar os ingredientes no modal de customização (para o tachitte customizado)
         function renderIngredients() {
-            ingredientsList.innerHTML = menuData.ingredientes.map(ing => `
+            const customizableIngredients = menuData.ingredientes.filter(ing => 
+                !['Peixe', 'Carne', 'Tofu', 'Frango'].includes(ing.name)
+            );
+            
+            ingredientsList.innerHTML = customizableIngredients.map(ing => `
                 <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
                     <input type="checkbox" data-id="${ing.id}" data-name="${ing.name}" class="ing-checkbox rounded text-red-500 focus:ring-red-500">
                     <span class="text-sm">${ing.name}</span>
+                </label>
+            `).join('');
+        }
+
+        // Função para renderizar as opções de tamanho
+        function renderSizes() {
+            sizeOptionsDiv.innerHTML = menuData.sizes.map(size => `
+                <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
+                    <input type="radio" name="size" data-id="${size.id}" data-name="${size.name}" data-price="${size.price}" class="size-radio rounded text-red-500 focus:ring-red-500">
+                    <span class="text-sm">${size.name} ${size.description}</span>
+                    <span class="text-sm text-red-600 ml-auto">${size.price > 0 ? `+R$ ${size.price.toFixed(2)}` : 'Grátis'}</span>
+                </label>
+            `).join('');
+        }
+
+        // Função para renderizar as opções de toppings salgados
+        function renderToppings() {
+            toppingsListDiv.innerHTML = menuData.toppings.map(topping => `
+                <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
+                    <input type="checkbox" data-id="${topping.id}" data-name="${topping.name}" data-price="${topping.price}" class="topping-checkbox rounded text-red-500 focus:ring-red-500">
+                    <span class="text-sm">${topping.name}</span>
+                    <span class="text-sm text-red-600 ml-auto">+R$ ${topping.price.toFixed(2)}</span>
+                </label>
+            `).join('');
+        }
+
+        // Função para renderizar as opções de toppings doces
+        function renderSweetToppings() {
+            sweetToppingsListDiv.innerHTML = menuData.sweetToppings.map(topping => `
+                <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
+                    <input type="checkbox" data-id="${topping.id}" data-name="${topping.name}" data-price="${topping.price}" class="sweet-topping-checkbox rounded text-red-500 focus:ring-red-500">
+                    <span class="text-sm">${topping.name}</span>
+                    <span class="text-sm text-red-600 ml-auto">+R$ ${topping.price.toFixed(2)}</span>
+                </label>
+            `).join('');
+        }
+        
+        // Função para renderizar as opções de toppings para o customizado
+        function renderCustomToppings() {
+             customToppingsList.innerHTML = menuData.toppings.map(topping => `
+                <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
+                    <input type="checkbox" data-id="${topping.id}" data-name="${topping.name}" data-price="${topping.price}" class="custom-topping-checkbox rounded text-red-500 focus:ring-red-500">
+                    <span class="text-sm">${topping.name}</span>
+                    <span class="text-sm text-red-600 ml-auto">+R$ ${topping.price.toFixed(2)}</span>
+                </label>
+            `).join('');
+        }
+
+        // Função para renderizar as opções de sabor de refrigerante
+        function renderSodaFlavors() {
+            sodaFlavorsListDiv.innerHTML = menuData.sodaFlavors.map(flavor => `
+                <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
+                    <input type="radio" name="soda-flavor" data-id="${flavor.id}" data-name="${flavor.name}" data-price="${flavor.price}" class="soda-flavor-radio rounded text-red-500 focus:ring-red-500">
+                    <span class="text-sm">${flavor.name}</span>
                 </label>
             `).join('');
         }
@@ -489,13 +727,33 @@
                     const price = item.price * item.quantity;
                     total += price;
 
+                    let details = '';
+                    if (item.selectedSize) {
+                        details += `Tamanho: ${item.selectedSize.name}<br>`;
+                    }
+                    if (item.selectedProtein) {
+                        details += `Proteína: ${item.selectedProtein}<br>`;
+                    }
+                    if (item.selectedToppings && item.selectedToppings.length > 0) {
+                        details += `Toppings Salgados: ${item.selectedToppings.map(t => t.name).join(', ')}<br>`;
+                    }
+                    if (item.selectedSweetToppings && item.selectedSweetToppings.length > 0) {
+                         details += `Coberturas Doces: ${item.selectedSweetToppings.map(t => t.name).join(', ')}<br>`;
+                    }
+                    if (item.selectedSodaFlavor) {
+                        details += `Sabor: ${item.selectedSodaFlavor.name}<br>`;
+                    }
+                    if (item.ingredients) {
+                        details += `Ingredientes: ${item.ingredients.join(', ')}<br>`;
+                    }
+                    
                     const itemHtml = `
                         <div class="flex items-center justify-between border-b pb-4">
                             <div class="flex items-center space-x-4">
                                 <img src="${item.img}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
                                 <div>
                                     <h4 class="font-bold text-red-900">${item.name}</h4>
-                                    ${item.ingredients ? `<p class="text-sm text-red-400">Ingredientes: ${item.ingredients.join(', ')}</p>` : ''}
+                                    <p class="text-sm text-red-400">${details}</p>
                                     <span class="text-red-600">R$ ${item.price.toFixed(2)}</span>
                                 </div>
                             </div>
@@ -539,12 +797,8 @@
 
         // Adiciona um item ao carrinho
         function addItemToCart(item) {
-            const existingItem = state.cart.find(cartItem => cartItem.id === item.id && !cartItem.ingredients);
-            if (existingItem) {
-                existingItem.quantity++;
-            } else {
-                state.cart.push({ ...item, quantity: 1 });
-            }
+            const newItem = { ...item, quantity: 1 };
+            state.cart.push(newItem);
             updateCartView();
             showStatusMessage(`${item.name} adicionado ao carrinho!`);
         }
@@ -602,17 +856,217 @@
             if (e.target.closest('.add-to-cart-btn')) {
                 const button = e.target.closest('.add-to-cart-btn');
                 const itemId = button.dataset.id;
-                const isCustom = button.dataset.custom === 'true';
+                const item = menuData.tachittes.find(i => i.id === itemId) || menuData.bebidas.find(i => i.id === itemId) || menuData.combos.find(i => i.id === itemId);
+                
+                state.selectedItem = item;
 
-                if (isCustom) {
-                    renderIngredients();
-                    customizeModal.classList.remove('hidden');
+                // Fluxo de personalização
+                if (item.canCustomize) {
+                    renderSizes();
+                    sizeChoiceModal.classList.remove('hidden');
+                } else if (item.isCustom) {
+                    // O item customizado também começa com a escolha de tamanho
+                    renderSizes();
+                    sizeChoiceModal.classList.remove('hidden');
+                } else if (item.type === 'refri' && item.canChooseFlavor) {
+                    renderSodaFlavors();
+                    sodaChoiceModal.classList.remove('hidden');
                 } else {
-                    const item = menuData.tachittes.find(i => i.id === itemId) || menuData.bebidas.find(i => i.id === itemId);
                     if (item) {
                         addItemToCart(item);
                     }
                 }
+            }
+
+            // Próximo passo (salgados e doces): Escolher tamanho -> Próximo modal
+            if (e.target.closest('#next-size-button')) {
+                const selectedSize = document.querySelector('input[name="size"]:checked');
+                if (!selectedSize) {
+                    showStatusMessage('Por favor, selecione um tamanho.', 'error');
+                    return;
+                }
+                state.selectedSize = {
+                    name: selectedSize.dataset.name,
+                    price: parseFloat(selectedSize.dataset.price)
+                };
+                sizeChoiceModal.classList.add('hidden');
+                
+                if (state.selectedItem.type === 'salty') {
+                    proteinChoiceModal.classList.remove('hidden');
+                } else if (state.selectedItem.type === 'sweet') {
+                    renderSweetToppings();
+                    sweetToppingsChoiceModal.classList.remove('hidden');
+                } else if (state.selectedItem.isCustom) {
+                    renderIngredients();
+                    customizeModal.classList.remove('hidden');
+                }
+            }
+
+            // Próximo passo: Escolher proteína -> Abrir modal de toppings salgados
+            if (e.target.closest('#next-protein-button')) {
+                const selectedProtein = document.querySelector('input[name="protein"]:checked');
+                if (!selectedProtein) {
+                    showStatusMessage('Por favor, selecione uma proteína.', 'error');
+                    return;
+                }
+                state.selectedProtein = selectedProtein.value;
+                proteinChoiceModal.classList.add('hidden');
+                renderToppings();
+                toppingsChoiceModal.classList.remove('hidden');
+            }
+            
+            // Próximo passo (customizado): Escolher ingredientes -> Abrir modal de molhos
+            if (e.target.closest('#next-custom-toppings-button')) {
+                const selectedIngredients = Array.from(document.querySelectorAll('.ing-checkbox:checked')).map(cb => cb.dataset.name);
+                if (selectedIngredients.length > 5) {
+                    showStatusMessage('Você pode selecionar no máximo 5 ingredientes.', 'error');
+                    return;
+                }
+                if (selectedIngredients.length === 0) {
+                     showStatusMessage('Selecione pelo menos um ingrediente.', 'error');
+                     return;
+                }
+                
+                state.selectedCustomIngredients = selectedIngredients;
+                customizeModal.classList.add('hidden');
+
+                // Abre o modal para escolher molhos
+                renderCustomToppings();
+                customToppingsModal.classList.remove('hidden');
+            }
+
+
+            // Finalizar personalização e adicionar ao carrinho (Tachitte Salgado)
+            if (e.target.closest('#add-toppings-button')) {
+                state.selectedToppings = Array.from(document.querySelectorAll('.topping-checkbox:checked')).map(cb => ({
+                    name: cb.dataset.name,
+                    price: parseFloat(cb.dataset.price)
+                }));
+                
+                const finalItem = { ...state.selectedItem };
+                
+                // Ajustar nome, descrição e preço com base nas escolhas
+                finalItem.name = `${finalItem.name} (${state.selectedSize.name})`;
+                finalItem.price += state.selectedSize.price;
+                finalItem.name += ` (com ${state.selectedProtein})`;
+                
+                if (state.selectedToppings.length > 0) {
+                    finalItem.name += ` + Toppings`;
+                    state.selectedToppings.forEach(topping => {
+                        finalItem.price += topping.price;
+                    });
+                }
+
+                finalItem.selectedSize = state.selectedSize;
+                finalItem.selectedProtein = state.selectedProtein;
+                finalItem.selectedToppings = state.selectedToppings;
+                
+                addItemToCart(finalItem);
+                
+                // Limpar o estado de personalização
+                state.selectedItem = null;
+                state.selectedSize = null;
+                state.selectedProtein = null;
+                state.selectedToppings = [];
+                
+                toppingsChoiceModal.classList.add('hidden');
+            }
+
+            // Finalizar personalização e adicionar ao carrinho (Tachitte Doce)
+            if (e.target.closest('#add-sweet-toppings-button')) {
+                state.selectedSweetToppings = Array.from(document.querySelectorAll('.sweet-topping-checkbox:checked')).map(cb => ({
+                    name: cb.dataset.name,
+                    price: parseFloat(cb.dataset.price)
+                }));
+                
+                const finalItem = { ...state.selectedItem };
+                
+                // Ajustar nome, descrição e preço com base nas escolhas
+                finalItem.name = `${finalItem.name} (${state.selectedSize.name})`;
+                finalItem.price += state.selectedSize.price;
+
+                if (state.selectedSweetToppings.length > 0) {
+                    finalItem.name += ` + Coberturas`;
+                    state.selectedSweetToppings.forEach(topping => {
+                        finalItem.price += topping.price;
+                    });
+                }
+
+                finalItem.selectedSize = state.selectedSize;
+                finalItem.selectedSweetToppings = state.selectedSweetToppings;
+                
+                addItemToCart(finalItem);
+                
+                // Limpar o estado de personalização
+                state.selectedItem = null;
+                state.selectedSize = null;
+                state.selectedSweetToppings = [];
+                
+                sweetToppingsChoiceModal.classList.add('hidden');
+            }
+
+            // Finalizar personalização e adicionar ao carrinho (Tachitte customizado)
+            if (e.target.closest('#add-custom-final-button')) {
+                const selectedToppings = Array.from(document.querySelectorAll('.custom-topping-checkbox:checked'));
+                if (selectedToppings.length > 2) {
+                     showStatusMessage('Você pode selecionar no máximo 2 molhos.', 'error');
+                     return;
+                }
+
+                state.selectedToppings = selectedToppings.map(cb => ({
+                    name: cb.dataset.name,
+                    price: parseFloat(cb.dataset.price)
+                }));
+                
+                 const customTachitte = {
+                     id: `custom-${Date.now()}`,
+                     name: `Tachitte Customizado`,
+                     description: `Com ${state.selectedCustomIngredients.join(', ')}.`,
+                     ingredients: state.selectedCustomIngredients,
+                     price: menuData.tachittes.find(t => t.isCustom).price + state.selectedSize.price,
+                     img: 'images/customizado.png',
+                     selectedSize: state.selectedSize
+                 };
+
+                 if (state.selectedToppings.length > 0) {
+                    customTachitte.selectedToppings = state.selectedToppings;
+                    customTachitte.name += ` + Molhos`;
+                    state.selectedToppings.forEach(topping => {
+                        customTachitte.price += topping.price;
+                    });
+                 }
+                
+                state.cart.push({ ...customTachitte, quantity: 1, selectedSize: state.selectedSize });
+                customToppingsModal.classList.add('hidden');
+                updateCartView();
+                showStatusMessage('Tachitte customizado adicionado ao carrinho!');
+
+                // Limpa o estado de personalização
+                state.selectedItem = null;
+                state.selectedSize = null;
+                state.selectedCustomIngredients = [];
+                state.selectedToppings = [];
+            }
+
+            // Adicionar refrigerante com sabor ao carrinho
+            if (e.target.closest('#add-soda-flavor-button')) {
+                const selectedFlavor = document.querySelector('input[name="soda-flavor"]:checked');
+                if (!selectedFlavor) {
+                    showStatusMessage('Por favor, selecione um sabor.', 'error');
+                    return;
+                }
+                const flavorName = selectedFlavor.dataset.name;
+                const item = state.selectedItem;
+                
+                const newItem = {
+                    ...item,
+                    name: `${item.name} (${flavorName})`,
+                    selectedSodaFlavor: { name: flavorName }
+                };
+
+                addItemToCart(newItem);
+                sodaChoiceModal.classList.add('hidden');
+                state.selectedItem = null;
             }
 
             // Abrir e fechar o modal do carrinho
@@ -624,10 +1078,40 @@
                 cartModal.classList.add('hidden');
             }
 
-            // Fechar modal de customização
+            // Fechar modais de personalização
+            if (e.target.closest('#close-size-choice-modal')) {
+                sizeChoiceModal.classList.add('hidden');
+                state.selectedItem = null;
+            }
+            if (e.target.closest('#close-protein-choice-modal')) {
+                proteinChoiceModal.classList.add('hidden');
+                sizeChoiceModal.classList.remove('hidden'); // Volta para o modal anterior
+                state.selectedProtein = null;
+            }
+            if (e.target.closest('#close-toppings-choice-modal')) {
+                toppingsChoiceModal.classList.add('hidden');
+                proteinChoiceModal.classList.remove('hidden'); // Volta para o modal anterior
+                state.selectedToppings = [];
+            }
+            if (e.target.closest('#close-sweet-toppings-choice-modal')) {
+                sweetToppingsChoiceModal.classList.add('hidden');
+                sizeChoiceModal.classList.remove('hidden'); // Volta para o modal anterior
+                state.selectedSweetToppings = [];
+            }
+            if (e.target.closest('#close-soda-choice-modal')) {
+                sodaChoiceModal.classList.add('hidden');
+                state.selectedItem = null;
+            }
             if (e.target.closest('#close-customize-modal')) {
                 customizeModal.classList.add('hidden');
+                sizeChoiceModal.classList.remove('hidden'); // Volta para o modal anterior
             }
+            if (e.target.closest('#close-custom-toppings-modal')) {
+                customToppingsModal.classList.add('hidden');
+                customizeModal.classList.remove('hidden');
+                state.selectedToppings = [];
+            }
+            
 
             // Abrir e fechar o modal de checkout
             if (e.target.closest('#checkout-button')) {
@@ -676,36 +1160,12 @@
                 showStatusMessage('Item removido do carrinho.');
             }
 
-            // Adicionar tachitte customizado ao carrinho
-            if (e.target.closest('#add-custom-tachitte-button')) {
-                const selectedIngredients = Array.from(document.querySelectorAll('.ing-checkbox:checked')).map(cb => cb.dataset.name);
-                if (selectedIngredients.length > 5) {
-                    showStatusMessage('Você pode selecionar no máximo 5 ingredientes.', 'error');
-                    return;
-                }
-                if (selectedIngredients.length === 0) {
-                     showStatusMessage('Selecione pelo menos um ingrediente.', 'error');
-                     return;
-                }
-                const customTachitte = {
-                    id: `custom-${Date.now()}`,
-                    name: 'Tachitte Customizado',
-                    description: `Com ${selectedIngredients.join(', ')}.`,
-                    ingredients: selectedIngredients,
-                    price: menuData.tachittes.find(t => t.isCustom).price,
-                    img: 'images/customizado.png'
-                };
-                state.cart.push({ ...customTachitte, quantity: 1 });
-                customizeModal.classList.add('hidden');
-                updateCartView();
-                showStatusMessage('Tachitte customizado adicionado ao carrinho!');
-            }
-
             // Enviar pedido para o WhatsApp
             if (e.target.closest('#send-whatsapp-button')) {
                 const total = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
                 let paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
                 const cardTypeRadio = document.querySelector('input[name="card-type"]:checked');
+                const pixPayload = getPixPayload(total);
                 
                 if (paymentMethod === 'Cartões' && cardTypeRadio) {
                     paymentMethod += ` - ${cardTypeRadio.value}`;
@@ -728,6 +1188,21 @@
 
                 state.cart.forEach(item => {
                     message += `- ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2)})\n`;
+                    if (item.selectedSize) {
+                        message += `  > Tamanho: ${item.selectedSize.name}\n`;
+                    }
+                    if (item.selectedProtein) {
+                        message += `  > Proteína: ${item.selectedProtein}\n`;
+                    }
+                    if (item.selectedToppings && item.selectedToppings.length > 0) {
+                        message += `  > Toppings: ${item.selectedToppings.map(t => t.name).join(', ')}\n`;
+                    }
+                    if (item.selectedSweetToppings && item.selectedSweetToppings.length > 0) {
+                        message += `  > Coberturas: ${item.selectedSweetToppings.map(t => t.name).join(', ')}\n`;
+                    }
+                    if (item.selectedSodaFlavor) {
+                        message += `  > Sabor: ${item.selectedSodaFlavor.name}\n`;
+                    }
                     if (item.ingredients) {
                         message += `  > Ingredientes: ${item.ingredients.join(', ')}\n`;
                     }
@@ -739,9 +1214,15 @@
                     message += `*Endereço de Entrega: ${deliveryAddress}*\n`;
                     message += `*Telefone: ${clientPhone}*\n`;
                 }
-
+                
                 message += `\n*Total: R$ ${total.toFixed(2)}*\n`;
                 message += `*Forma de Pagamento: ${paymentMethod}*\n`;
+
+                // Adiciona o código Pix para Copia e Cola, se o método for Pix
+                if (paymentMethod.startsWith('PIX')) {
+                    message += `\n*Pix Copia e Cola:*\n${pixPayload}\n`;
+                }
+
 
                 const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
@@ -782,6 +1263,9 @@
             }
             if (e.target.closest('#bebidas-tab')) {
                 showTab('bebidas-menu');
+            }
+            if (e.target.closest('#combos-tab')) {
+                showTab('combos-menu');
             }
             
             // Lógica para selecionar a opção de pagamento e ativar a classe 'active' e mostrar as sub-opções
@@ -841,13 +1325,6 @@
             if (paymentOptionContainer) {
                  document.querySelectorAll('.payment-options-container > div').forEach(div => div.classList.remove('active'));
                  paymentOptionContainer.classList.add('active');
-                 const radioButton = paymentOptionContainer.querySelector('.payment-method-radio');
-                 if (radioButton) {
-                    radioButton.checked = true;
-                    // Força a execução da lógica de sub-opções
-                    const event = new Event('change');
-                    radioButton.dispatchEvent(event);
-                 }
             }
         });
         
@@ -882,12 +1359,8 @@
             const currentTotal = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
             const payload = getPixPayload(currentTotal);
             
-            navigator.clipboard.writeText(payload).then(() => {
-                showStatusMessage('Chave Pix copiada para a área de transferência!');
-            }).catch(err => {
-                console.error('Falha ao copiar a chave Pix:', err);
-                showStatusMessage('Erro ao copiar a chave Pix.', 'error');
-            });
+            document.execCommand('copy');
+            showStatusMessage('Chave Pix copiada para a área de transferência!');
         });
 
         // Inicializa a aplicação e registra o Service Worker
