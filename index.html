@@ -474,6 +474,24 @@
             document.getElementById(tabId).classList.remove('hidden');
             document.querySelector(`#${tabId.replace('-menu', '-tab')}`).classList.add('active');
         }
+        
+        // Função para resetar os campos do formulário
+        function resetCheckoutForm() {
+            addressInput.value = '';
+            phoneInput.value = '';
+            moneyValueInput.value = '';
+            changeValueP.textContent = '';
+            document.querySelector('input[name="payment-method"][value="PIX"]').checked = true;
+            cardSubOptionsDiv.classList.add('hidden');
+            moneyChangeOptionsDiv.classList.add('hidden');
+            
+            // Redefine a opção de pedido para Retirar
+            state.isDelivery = false;
+            pickupOptionBtn.classList.add('border-red-500', 'bg-red-500', 'text-white');
+            deliveryOptionBtn.classList.remove('border-red-500', 'bg-red-500', 'text-white');
+            pickupOptionBtn.classList.remove('border-red-300', 'bg-white', 'text-red-800');
+            deliveryOptionBtn.classList.add('border-red-300', 'bg-white', 'text-red-800');
+        }
 
         // Manipuladores de eventos
         document.addEventListener('click', (e) => {
@@ -520,6 +538,8 @@
             }
             if (e.target.closest('#close-checkout-modal')) {
                 checkoutModal.classList.add('hidden');
+                // Limpa os dados do formulário ao fechar o modal
+                resetCheckoutForm();
             }
             
             // Alterar quantidade no carrinho
@@ -620,6 +640,7 @@
                 state.cart = [];
                 updateCartView();
                 checkoutModal.classList.add('hidden');
+                resetCheckoutForm();
             }
 
             // Opções de entrega/retirada
@@ -657,6 +678,9 @@
             if (e.target.closest('.payment-method-radio[value="Cartões"]')) {
                 cardSubOptionsDiv.classList.remove('hidden');
                 moneyChangeOptionsDiv.classList.add('hidden');
+                // Reseta o campo de troco ao mudar
+                moneyValueInput.value = '';
+                changeValueP.textContent = '';
             } else if (e.target.closest('.payment-method-radio[value="Dinheiro"]')) {
                 moneyChangeOptionsDiv.classList.remove('hidden');
                 cardSubOptionsDiv.classList.add('hidden');
@@ -685,8 +709,9 @@
 
         // Adicionar um listener para evitar que o modal feche quando interage com inputs
         checkoutModal.addEventListener('click', (e) => {
-            if (e.target.tagName.toLowerCase() === 'input') {
-                e.stopPropagation();
+            if (!e.target.closest('.bg-white.rounded-lg')) {
+                checkoutModal.classList.add('hidden');
+                resetCheckoutForm();
             }
         });
 
