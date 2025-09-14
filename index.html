@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tachitte PWA</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Icones Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Estilos personalizados para o PWA */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Gradiente de fundo suave para o cabeçalho */
+        .header-bg {
+            background-color: #dc2626;
+        }
+        .text-tachitte {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px #b91c1c;
+        }
+        /* Estilo para a animação do botão */
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        .btn-animate {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        /* Ocultar o scrollbar, mantendo a funcionalidade de rolagem */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none; /* IE and Edge */
+            scrollbar-width: none; /* Firefox */
+        }
+        /* Estilo para o modal */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Cabeçalho -->
+    <header class="header-bg text-white p-4 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-white text-tachitte">Tachitte</h1>
+            <div class="relative">
+                <button id="cart-button" class="p-2 relative rounded-full hover:bg-red-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    <span id="cart-count" class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-600 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main class="flex-grow container mx-auto p-4 md:p-8">
+
+        <!-- Opções de Pedido: Retirar ou Entregar -->
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6">
+            <h2 class="text-xl font-bold mb-4 text-red-600">Escolha a opção de pedido</h2>
+            <div class="flex space-x-4">
+                <button id="delivery-option" class="flex-1 py-3 px-4 rounded-full border border-gray-300 text-gray-700 bg-white hover:bg-red-100 transition-colors">
+                    Entrega
+                </button>
+                <button id="pickup-option" class="flex-1 py-3 px-4 rounded-full border border-red-500 text-white bg-red-500 hover:bg-red-600 transition-colors">
+                    Retirar
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mensagem de feedback do usuário -->
+        <div id="status-message" class="hidden fixed top-24 right-4 bg-red-500 text-white p-4 rounded-lg shadow-xl z-50"></div>
+
+        <!-- Seções do Menu -->
+        <section id="tachittes-menu" class="mb-8">
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Tachittes</h2>
+            <div id="tachittes-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Itens do menu serão inseridos aqui pelo JavaScript -->
+            </div>
+        </section>
+
+        <section id="bebidas-menu" class="mb-8">
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Bebidas</h2>
+            <div id="bebidas-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Itens do menu serão inseridos aqui pelo JavaScript -->
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- Modal do Carrinho -->
+    <div id="cart-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Seu Carrinho</h2>
+                <button id="close-cart-modal" class="text-gray-500 hover:text-gray-800 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div id="cart-items" class="space-y-4">
+                <!-- Itens do carrinho serão inseridos aqui -->
+            </div>
+            <div class="border-t pt-4 mt-4">
+                <div class="flex justify-between font-bold text-lg mb-2">
+                    <span>Total:</span>
+                    <span id="cart-total">R$ 0.00</span>
+                </div>
+                <button id="checkout-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors btn-animate">
+                    Finalizar Pedido
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Customização do Tachitte -->
+    <div id="customize-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Personalize seu Tachitte</h2>
+                <button id="close-customize-modal" class="text-gray-500 hover:text-gray-800 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <p class="text-sm text-gray-600 mb-4">Selecione até 5 ingredientes para o seu Tachitte customizado.</p>
+            <div id="ingredients-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                <!-- Ingredientes serão inseridos aqui pelo JavaScript -->
+            </div>
+            <div class="border-t pt-4">
+                <button id="add-custom-tachitte-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    Adicionar ao Carrinho
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados do menu
+        const menuData = {
+            tachittes: [
+                { id: 't1', name: 'Tradicional', description: 'Receita padrão do tachitte.', price: 15.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Tradicional' },
+                { id: 't2', name: 'Bacon', description: 'Acrecido de bacon em fatias.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Bacon' },
+                { id: 't3', name: 'Pepperone', description: 'Acrecido de pepperone fatiado.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Pepperone' },
+                { id: 't4', name: 'Salsicha', description: 'Acrecido de salsicha em fatias.', price: 17.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Salsicha' },
+                { id: 't5', name: 'Queijo', description: 'Acrecido de mussarela picada.', price: 17.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Queijo' },
+                { id: 't6', name: 'Vegano', description: 'No lugar de carne vai tofu e o arroz é integral.', price: 19.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Vegano' },
+                { id: 't7', name: 'Romeu e Julieta', description: 'Acrecido de goiabada e queijo mussarela.', price: 16.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Romeu+e+Julieta' },
+                { id: 't8', name: 'Chocolate', description: 'Acrecido de chocolate ao leite ou branco.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Chocolate' },
+                { id: 't9', name: 'Caramelo', description: 'Acrecido de caramelo.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Caramelo' },
+                { id: 't10', name: 'Customizado', description: 'Monte seu próprio tachitte com até 5 ingredientes.', price: 20.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Customizado', isCustom: true }
+            ],
+            bebidas: [
+                { id: 'b1', name: 'Suco de Laranja', description: 'Suco natural de laranja.', price: 7.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Laranja', type: 'suco' },
+                { id: 'b2', name: 'Suco de Limão', description: 'Suco natural de limão.', price: 7.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Limao', type: 'suco' },
+                { id: 'b3', name: 'Suco de Tangerina', description: 'Suco natural de tangerina.', price: 7.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Tangerina', type: 'suco' },
+                { id: 'b4', name: 'Suco de Morango', description: 'Suco natural de morango.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Morango', type: 'suco' },
+                { id: 'b5', name: 'Suco de Maçã', description: 'Suco natural de maçã.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Maca', type: 'suco' },
+                { id: 'b6', name: 'Suco de Uva', description: 'Suco natural de uva.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Uva', type: 'suco' },
+                { id: 'b7', name: 'Refrigerante Lata', description: 'Refrigerante em lata.', price: 6.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Refri+Lata', type: 'refri' },
+                { id: 'b8', name: 'Refrigerante 600ml', description: 'Refrigerante garrafa 600ml.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Refri+600ml', type: 'refri' },
+                { id: 'b9', name: 'Refrigerante 2L', description: 'Refrigerante garrafa 2 litros.', price: 12.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Refri+2L', type: 'refri' }
+            ],
+            ingredientes: [
+                { id: 'i1', name: 'Algas' }, { id: 'i2', name: 'Arroz' }, { id: 'i3', name: 'Cenoura' },
+                { id: 'i4', name: 'Peixe' }, { id: 'i5', name: 'Carne' }, { id: 'i6', name: 'Tofu' },
+                { id: 'i7', name: 'Bacon' }, { id: 'i8', name: 'Pepperone' }, { id: 'i9', name: 'Salsicha' },
+                { id: 'i10', name: 'Queijo' }, { id: 'i11', name: 'Goiabada' }, { id: 'i12', name: 'Chocolate' },
+                { id: 'i13', name: 'Caramelo' }
+            ]
+        };
+
+        // Estado global do app
+        const state = {
+            cart: [],
+            isDelivery: false,
+            deliveryFee: 5.00
+        };
+
+        // Seletores do DOM
+        const tachittesList = document.getElementById('tachittes-list');
+        const bebidasList = document.getElementById('bebidas-list');
+        const cartButton = document.getElementById('cart-button');
+        const cartCount = document.getElementById('cart-count');
+        const cartModal = document.getElementById('cart-modal');
+        const customizeModal = document.getElementById('customize-modal');
+        const closeCartModal = document.getElementById('close-cart-modal');
+        const closeCustomizeModal = document.getElementById('close-customize-modal');
+        const ingredientsList = document.getElementById('ingredients-list');
+        const addCustomTachitteButton = document.getElementById('add-custom-tachitte-button');
+        const checkoutButton = document.getElementById('checkout-button');
+        const deliveryOptionBtn = document.getElementById('delivery-option');
+        const pickupOptionBtn = document.getElementById('pickup-option');
+        const statusMessage = document.getElementById('status-message');
+
+        // Função para mostrar mensagem de feedback
+        function showStatusMessage(message, type = 'success') {
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('hidden', 'bg-red-500', 'bg-green-500');
+            statusMessage.classList.add(type === 'success' ? 'bg-red-500' : 'bg-red-500');
+            statusMessage.classList.add('animate-slide-in');
+            setTimeout(() => {
+                statusMessage.classList.remove('animate-slide-in');
+                statusMessage.classList.add('animate-slide-out');
+                setTimeout(() => {
+                    statusMessage.classList.add('hidden');
+                    statusMessage.classList.remove('animate-slide-out');
+                }, 500);
+            }, 3000);
+        }
+
+        // Função para renderizar um único item do menu
+        function renderMenuItem(item, listElement) {
+            const itemHtml = `
+                <div class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
+                    <div class="flex-shrink-0 mb-4">
+                        <img src="${item.img}" alt="${item.name}" class="w-full h-40 object-cover rounded-md mb-4">
+                        <h3 class="text-lg font-bold text-gray-800">${item.name}</h3>
+                        <p class="text-sm text-gray-500 min-h-[40px]">${item.description}</p>
+                    </div>
+                    <div class="flex items-center justify-between mt-auto">
+                        <span class="text-xl font-bold text-red-600">R$ ${item.price.toFixed(2)}</span>
+                        <button class="add-to-cart-btn bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors" data-id="${item.id}" data-custom="${item.isCustom || false}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            listElement.innerHTML += itemHtml;
+        }
+
+        // Função para renderizar o menu completo
+        function renderMenu() {
+            menuData.tachittes.forEach(item => renderMenuItem(item, tachittesList));
+            menuData.bebidas.forEach(item => renderMenuItem(item, bebidasList));
+        }
+
+        // Função para renderizar os ingredientes no modal de customização
+        function renderIngredients() {
+            ingredientsList.innerHTML = menuData.ingredientes.map(ing => `
+                <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition-colors">
+                    <input type="checkbox" data-id="${ing.id}" data-name="${ing.name}" class="ing-checkbox rounded text-red-500 focus:ring-red-500">
+                    <span class="text-sm">${ing.name}</span>
+                </label>
+            `).join('');
+        }
+        
+        // Atualiza a visualização do carrinho (itens e total)
+        function updateCartView() {
+            const cartItemsList = document.getElementById('cart-items');
+            const cartTotal = document.getElementById('cart-total');
+            cartItemsList.innerHTML = '';
+            let total = 0;
+
+            if (state.cart.length === 0) {
+                cartItemsList.innerHTML = '<p class="text-gray-500 text-center">Seu carrinho está vazio.</p>';
+                checkoutButton.disabled = true;
+                checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                checkoutButton.disabled = false;
+                checkoutButton.classList.remove('opacity-50', 'cursor-not-allowed');
+
+                state.cart.forEach((item, index) => {
+                    const price = item.price * item.quantity;
+                    total += price;
+
+                    const itemHtml = `
+                        <div class="flex items-center justify-between border-b pb-4">
+                            <div class="flex items-center space-x-4">
+                                <img src="${item.img}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
+                                <div>
+                                    <h4 class="font-bold text-gray-800">${item.name}</h4>
+                                    ${item.ingredients ? `<p class="text-sm text-gray-500">Ingredientes: ${item.ingredients.join(', ')}</p>` : ''}
+                                    <span class="text-gray-600">R$ ${item.price.toFixed(2)}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <button class="update-quantity-btn w-6 h-6 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center" data-index="${index}" data-action="decrease">-</button>
+                                <span class="font-bold">${item.quantity}</span>
+                                <button class="update-quantity-btn w-6 h-6 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center" data-index="${index}" data-action="increase">+</button>
+                                <button class="remove-from-cart-btn text-red-500 hover:text-red-700 transition-colors" data-index="${index}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    cartItemsList.innerHTML += itemHtml;
+                });
+            }
+
+            // Adiciona a taxa de entrega se a opção estiver selecionada
+            let finalTotal = total;
+            if (state.isDelivery) {
+                finalTotal += state.deliveryFee;
+                const deliveryFeeHtml = `
+                    <div class="flex justify-between text-sm text-gray-500 mt-2">
+                        <span>Taxa de Entrega:</span>
+                        <span>R$ ${state.deliveryFee.toFixed(2)}</span>
+                    </div>
+                `;
+                cartItemsList.innerHTML += deliveryFeeHtml;
+            }
+
+            cartTotal.textContent = `R$ ${finalTotal.toFixed(2)}`;
+            cartCount.textContent = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+        }
+
+        // Adiciona um item ao carrinho
+        function addItemToCart(item) {
+            const existingItem = state.cart.find(cartItem => cartItem.id === item.id && !cartItem.ingredients);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                state.cart.push({ ...item, quantity: 1 });
+            }
+            updateCartView();
+            showStatusMessage(`${item.name} adicionado ao carrinho!`);
+        }
+
+        // Manipuladores de eventos
+        document.addEventListener('click', (e) => {
+            // Adicionar ao carrinho
+            if (e.target.closest('.add-to-cart-btn')) {
+                const button = e.target.closest('.add-to-cart-btn');
+                const itemId = button.dataset.id;
+                const isCustom = button.dataset.custom === 'true';
+
+                if (isCustom) {
+                    renderIngredients();
+                    customizeModal.classList.remove('hidden');
+                } else {
+                    const item = menuData.tachittes.find(i => i.id === itemId) || menuData.bebidas.find(i => i.id === itemId);
+                    if (item) {
+                        addItemToCart(item);
+                    }
+                }
+            }
+
+            // Abrir e fechar o modal do carrinho
+            if (e.target.closest('#cart-button')) {
+                updateCartView();
+                cartModal.classList.remove('hidden');
+            }
+            if (e.target.closest('#close-cart-modal')) {
+                cartModal.classList.add('hidden');
+            }
+
+            // Fechar modal de customização
+            if (e.target.closest('#close-customize-modal')) {
+                customizeModal.classList.add('hidden');
+            }
+
+            // Alterar quantidade no carrinho
+            if (e.target.closest('.update-quantity-btn')) {
+                const button = e.target.closest('.update-quantity-btn');
+                const index = parseInt(button.dataset.index);
+                const action = button.dataset.action;
+                const item = state.cart[index];
+
+                if (action === 'increase') {
+                    item.quantity++;
+                } else if (action === 'decrease' && item.quantity > 1) {
+                    item.quantity--;
+                }
+                updateCartView();
+            }
+
+            // Remover item do carrinho
+            if (e.target.closest('.remove-from-cart-btn')) {
+                const button = e.target.closest('.remove-from-cart-btn');
+                const index = parseInt(button.dataset.index);
+                state.cart.splice(index, 1);
+                updateCartView();
+                showStatusMessage('Item removido do carrinho.');
+            }
+
+            // Adicionar tachitte customizado ao carrinho
+            if (e.target.closest('#add-custom-tachitte-button')) {
+                const selectedIngredients = Array.from(document.querySelectorAll('.ing-checkbox:checked')).map(cb => cb.dataset.name);
+                if (selectedIngredients.length > 5) {
+                    showStatusMessage('Você pode selecionar no máximo 5 ingredientes.', 'error');
+                    return;
+                }
+                if (selectedIngredients.length === 0) {
+                     showStatusMessage('Selecione pelo menos um ingrediente.', 'error');
+                     return;
+                }
+                const customTachitte = {
+                    id: `custom-${Date.now()}`,
+                    name: 'Tachitte Customizado',
+                    description: `Com ${selectedIngredients.join(', ')}.`,
+                    ingredients: selectedIngredients,
+                    price: menuData.tachittes.find(t => t.isCustom).price,
+                    img: 'https://placehold.co/400x300/f3f4f6/333?text=Custom'
+                };
+                state.cart.push({ ...customTachitte, quantity: 1 });
+                customizeModal.classList.add('hidden');
+                updateCartView();
+                showStatusMessage('Tachitte customizado adicionado ao carrinho!');
+            }
+
+            // Finalizar pedido
+            if (e.target.closest('#checkout-button')) {
+                if (state.cart.length > 0) {
+                    showStatusMessage('Pedido finalizado com sucesso! Em breve entraremos em contato.', 'success');
+                    state.cart = []; // Limpa o carrinho
+                    updateCartView();
+                    cartModal.classList.add('hidden');
+                }
+            }
+
+            // Opções de entrega/retirada
+            if (e.target.closest('#delivery-option')) {
+                state.isDelivery = true;
+                deliveryOptionBtn.classList.add('border-red-500', 'bg-red-500', 'text-white');
+                pickupOptionBtn.classList.remove('border-red-500', 'bg-red-500', 'text-white');
+                deliveryOptionBtn.classList.remove('border-gray-300', 'bg-white', 'text-gray-700');
+                pickupOptionBtn.classList.add('border-gray-300', 'bg-white', 'text-gray-700');
+                updateCartView();
+                showStatusMessage('Opção de Entrega selecionada. Taxa de R$ 5.00 será adicionada.');
+            }
+            if (e.target.closest('#pickup-option')) {
+                state.isDelivery = false;
+                pickupOptionBtn.classList.add('border-red-500', 'bg-red-500', 'text-white');
+                deliveryOptionBtn.classList.remove('border-red-500', 'bg-red-500', 'text-white');
+                pickupOptionBtn.classList.remove('border-gray-300', 'bg-white', 'text-gray-700');
+                deliveryOptionBtn.classList.add('border-gray-300', 'bg-white', 'text-gray-700');
+                updateCartView();
+                showStatusMessage('Opção de Retirada selecionada. Sem taxa adicional.');
+            }
+        });
+
+        // Inicializa a aplicação
+        renderMenu();
+        updateCartView();
+    </script>
+</body>
+</html>
