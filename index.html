@@ -12,7 +12,7 @@
         /* Estilos personalizados para o PWA */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            background-color: #fef2f2; /* Vermelho pastel claro */
         }
         /* Gradiente de fundo suave para o cabeçalho */
         .header-bg {
@@ -47,9 +47,27 @@
             background-color: rgba(0, 0, 0, 0.7);
             z-index: 1000;
         }
+        .tab-button.active {
+            border-bottom: 3px solid #dc2626;
+            color: #dc2626;
+            font-weight: bold;
+        }
+        /* Estilo para o spinner de carregamento */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #dc2626;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-red-50 min-h-screen flex flex-col">
 
     <!-- Cabeçalho -->
     <header class="header-bg text-white p-4 shadow-lg sticky top-0 z-50">
@@ -66,12 +84,26 @@
 
     <!-- Conteúdo Principal -->
     <main class="flex-grow container mx-auto p-4 md:p-8">
+        
+        <!-- Sobre os Tachittes -->
+        <div class="bg-white p-4 rounded-lg shadow-md mb-6 text-center">
+            <h2 class="text-2xl font-bold mb-2 text-red-600">O que são Tachittes?</h2>
+            <p class="text-red-800 leading-relaxed">
+                Descubra o Tachitte, a nossa versão aprimorada do sushi! Mais do que um simples enrolado, o Tachitte é uma experiência completa: <b>maior</b>, <b>mais recheado</b> e irresistivelmente saboroso. Nossa receita base é feita com <b>arroz</b>, <b>alga</b>, <b>cenoura</b> e uma proteína suculenta (<b>peixe</b> ou <b>carne</b>), criando a tela perfeita para as mais variadas combinações de sabores. Venha se surpreender!
+            </p>
+            <div id="image-loader" class="mt-4 hidden">
+                <div class="flex items-center justify-center space-x-2 text-red-600">
+                    <div class="spinner"></div>
+                    <span>Gerando imagens...</span>
+                </div>
+            </div>
+        </div>
 
         <!-- Opções de Pedido: Retirar ou Entregar -->
         <div class="bg-white p-4 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-bold mb-4 text-red-600">Escolha a opção de pedido</h2>
             <div class="flex space-x-4">
-                <button id="delivery-option" class="flex-1 py-3 px-4 rounded-full border border-gray-300 text-gray-700 bg-white hover:bg-red-100 transition-colors">
+                <button id="delivery-option" class="flex-1 py-3 px-4 rounded-full border border-red-300 text-red-800 bg-white hover:bg-red-100 transition-colors">
                     Entrega
                 </button>
                 <button id="pickup-option" class="flex-1 py-3 px-4 rounded-full border border-red-500 text-white bg-red-500 hover:bg-red-600 transition-colors">
@@ -83,29 +115,50 @@
         <!-- Mensagem de feedback do usuário -->
         <div id="status-message" class="hidden fixed top-24 right-4 bg-red-500 text-white p-4 rounded-lg shadow-xl z-50"></div>
 
-        <!-- Seções do Menu -->
-        <section id="tachittes-menu" class="mb-8">
-            <h2 class="text-2xl font-bold text-red-600 mb-4">Tachittes</h2>
-            <div id="tachittes-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Itens do menu serão inseridos aqui pelo JavaScript -->
+        <!-- Abas de Navegação -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="flex border-b border-red-300">
+                <button id="salgados-tab" class="tab-button flex-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors rounded-tl-lg active">Salgados</button>
+                <button id="doces-tab" class="tab-button flex-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors">Doces</button>
+                <button id="bebidas-tab" class="tab-1 py-3 px-4 text-center text-red-800 hover:bg-red-50 transition-colors rounded-tr-lg">Bebidas</button>
+            </div>
+        </div>
+
+        <!-- Conteúdo das Abas -->
+        <section id="salgados-menu" class="menu-tab">
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Tachittes Salgados</h2>
+            <div id="salgados-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Itens salgados serão inseridos aqui pelo JavaScript -->
             </div>
         </section>
 
-        <section id="bebidas-menu" class="mb-8">
+        <section id="doces-menu" class="menu-tab hidden">
+            <h2 class="text-2xl font-bold text-red-600 mb-4">Tachittes Doces</h2>
+            <div id="doces-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Itens doces serão inseridos aqui pelo JavaScript -->
+            </div>
+        </section>
+
+        <section id="bebidas-menu" class="menu-tab hidden">
             <h2 class="text-2xl font-bold text-red-600 mb-4">Bebidas</h2>
             <div id="bebidas-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Itens do menu serão inseridos aqui pelo JavaScript -->
+                <!-- Itens de bebidas serão inseridos aqui pelo JavaScript -->
             </div>
         </section>
 
     </main>
     
+    <!-- Aviso de Conteúdo Fictício -->
+    <div class="text-center text-xs text-red-400 mt-8 mb-4 px-4">
+        Este site, incluindo todos os produtos e o restaurante Tachitte, é fictício e foi criado apenas para fins de demonstração.
+    </div>
+
     <!-- Modal do Carrinho -->
     <div id="cart-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Seu Carrinho</h2>
-                <button id="close-cart-modal" class="text-gray-500 hover:text-gray-800 transition-colors">
+                <h2 class="text-2xl font-bold text-red-900">Seu Carrinho</h2>
+                <button id="close-cart-modal" class="text-red-400 hover:text-red-900 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
             </div>
@@ -128,12 +181,12 @@
     <div id="customize-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Personalize seu Tachitte</h2>
-                <button id="close-customize-modal" class="text-gray-500 hover:text-gray-800 transition-colors">
+                <h2 class="text-2xl font-bold text-red-900">Personalize seu Tachitte</h2>
+                <button id="close-customize-modal" class="text-red-400 hover:text-red-900 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
             </div>
-            <p class="text-sm text-gray-600 mb-4">Selecione até 5 ingredientes para o seu Tachitte customizado.</p>
+            <p class="text-sm text-red-600 mb-4">Selecione até 5 ingredientes para o seu Tachitte customizado.</p>
             <div id="ingredients-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
                 <!-- Ingredientes serão inseridos aqui pelo JavaScript -->
             </div>
@@ -149,27 +202,27 @@
         // Dados do menu
         const menuData = {
             tachittes: [
-                { id: 't1', name: 'Tradicional', description: 'Receita padrão do tachitte.', price: 15.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Tradicional' },
-                { id: 't2', name: 'Bacon', description: 'Acrecido de bacon em fatias.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Bacon' },
-                { id: 't3', name: 'Pepperone', description: 'Acrecido de pepperone fatiado.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Pepperone' },
-                { id: 't4', name: 'Salsicha', description: 'Acrecido de salsicha em fatias.', price: 17.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Salsicha' },
-                { id: 't5', name: 'Queijo', description: 'Acrecido de mussarela picada.', price: 17.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Queijo' },
-                { id: 't6', name: 'Vegano', description: 'No lugar de carne vai tofu e o arroz é integral.', price: 19.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Vegano' },
-                { id: 't7', name: 'Romeu e Julieta', description: 'Acrecido de goiabada e queijo mussarela.', price: 16.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Romeu+e+Julieta' },
-                { id: 't8', name: 'Chocolate', description: 'Acrecido de chocolate ao leite ou branco.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Chocolate' },
-                { id: 't9', name: 'Caramelo', description: 'Acrecido de caramelo.', price: 18.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Caramelo' },
-                { id: 't10', name: 'Customizado', description: 'Monte seu próprio tachitte com até 5 ingredientes.', price: 20.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Customizado', isCustom: true }
+                { id: 't1', name: 'Tradicional', description: 'Uma explosão de sabor com nossa base tradicional: arroz, alga, cenoura e proteína (peixe ou carne).', price: 15.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'salty' },
+                { id: 't2', name: 'Bacon', description: 'A nossa receita clássica de tachitte com a irresistível adição de fatias crocantes de bacon.', price: 18.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'salty' },
+                { id: 't3', name: 'Pepperone', description: 'Um toque picante e defumado com a nossa receita padrão e generosas fatias de pepperoni.', price: 18.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'salty' },
+                { id: 't4', name: 'Salsicha', description: 'Saboroso e reconfortante: o tachitte tradicional com fatias de salsicha.', price: 17.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'salty' },
+                { id: 't5', name: 'Queijo', description: 'Para os amantes de queijo: a receita padrão com mussarela derretida e picada por toda parte.', price: 17.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'salty' },
+                { id: 't6', name: 'Vegano', description: 'Nossa opção deliciosa e 100% à base de plantas. Leca arroz integral, algas, cenoura e tofu no lugar da proteína animal.', price: 19.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'salty' },
+                { id: 't7', name: 'Romeu e Julieta', description: 'Um clássico reinventado! A base de tachitte salgada encontra a doçura da goiabada e o sabor suave do queijo mussarela.', price: 16.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'sweet' },
+                { id: 't8', name: 'Chocolate', description: 'O paraíso para os apaixonados por doces. O tachitte tradicional com um recheio generoso de chocolate ao leite ou branco.', price: 18.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'sweet' },
+                { id: 't9', name: 'Caramelo', description: 'Uma combinação surpreendente de sabores! A nossa receita clássica finalizada com a doçura e textura do caramelo.', price: 18.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'sweet' },
+                { id: 't10', name: 'Customizado', description: 'Liberte sua criatividade! Monte seu próprio tachitte único com até 5 ingredientes da sua escolha.', price: 20.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', isCustom: true, type: 'salty' }
             ],
             bebidas: [
-                { id: 'b1', name: 'Suco de Laranja', description: 'Suco natural de laranja.', price: 7.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Laranja', type: 'suco' },
-                { id: 'b2', name: 'Suco de Limão', description: 'Suco natural de limão.', price: 7.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Limao', type: 'suco' },
-                { id: 'b3', name: 'Suco de Tangerina', description: 'Suco natural de tangerina.', price: 7.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Tangerina', type: 'suco' },
-                { id: 'b4', name: 'Suco de Morango', description: 'Suco natural de morango.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Morango', type: 'suco' },
-                { id: 'b5', name: 'Suco de Maçã', description: 'Suco natural de maçã.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Maca', type: 'suco' },
-                { id: 'b6', name: 'Suco de Uva', description: 'Suco natural de uva.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Suco+Uva', type: 'suco' },
-                { id: 'b7', name: 'Refrigerante Lata', description: 'Refrigerante em lata.', price: 6.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Refri+Lata', type: 'refri' },
-                { id: 'b8', name: 'Refrigerante 600ml', description: 'Refrigerante garrafa 600ml.', price: 8.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Refri+600ml', type: 'refri' },
-                { id: 'b9', name: 'Refrigerante 2L', description: 'Refrigerante garrafa 2 litros.', price: 12.00, img: 'https://placehold.co/400x300/f3f4f6/333?text=Refri+2L', type: 'refri' }
+                { id: 'b1', name: 'Suco de Laranja', description: 'Suco natural de laranja.', price: 7.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'suco' },
+                { id: 'b2', name: 'Suco de Limão', description: 'Suco natural de limão.', price: 7.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'suco' },
+                { id: 'b3', name: 'Suco de Tangerina', description: 'Suco natural de tangerina.', price: 7.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'suco' },
+                { id: 'b4', name: 'Suco de Morango', description: 'Suco natural de morango.', price: 8.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'suco' },
+                { id: 'b5', name: 'Suco de Maçã', description: 'Suco natural de maçã.', price: 8.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'suco' },
+                { id: 'b6', name: 'Suco de Uva', description: 'Suco natural de uva.', price: 8.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'suco' },
+                { id: 'b7', name: 'Refrigerante Lata', description: 'Refrigerante em lata.', price: 6.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'refri' },
+                { id: 'b8', name: 'Refrigerante 600ml', description: 'Refrigerante garrafa 600ml.', price: 8.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'refri' },
+                { id: 'b9', name: 'Refrigerante 2L', description: 'Refrigerante garrafa 2 litros.', price: 12.00, img: 'https://placehold.co/400x300/fef2f2/333?text=Carregando...', type: 'refri' }
             ],
             ingredientes: [
                 { id: 'i1', name: 'Algas' }, { id: 'i2', name: 'Arroz' }, { id: 'i3', name: 'Cenoura' },
@@ -188,7 +241,8 @@
         };
 
         // Seletores do DOM
-        const tachittesList = document.getElementById('tachittes-list');
+        const tachittesList = document.getElementById('salgados-list');
+        const docesList = document.getElementById('doces-list');
         const bebidasList = document.getElementById('bebidas-list');
         const cartButton = document.getElementById('cart-button');
         const cartCount = document.getElementById('cart-count');
@@ -202,6 +256,9 @@
         const deliveryOptionBtn = document.getElementById('delivery-option');
         const pickupOptionBtn = document.getElementById('pickup-option');
         const statusMessage = document.getElementById('status-message');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const menuSections = document.querySelectorAll('.menu-tab');
+        const imageLoader = document.getElementById('image-loader');
 
         // Função para mostrar mensagem de feedback
         function showStatusMessage(message, type = 'success') {
@@ -225,8 +282,8 @@
                 <div class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
                     <div class="flex-shrink-0 mb-4">
                         <img src="${item.img}" alt="${item.name}" class="w-full h-40 object-cover rounded-md mb-4">
-                        <h3 class="text-lg font-bold text-gray-800">${item.name}</h3>
-                        <p class="text-sm text-gray-500 min-h-[40px]">${item.description}</p>
+                        <h3 class="text-lg font-bold text-red-900">${item.name}</h3>
+                        <p class="text-sm text-red-400 min-h-[40px]">${item.description}</p>
                     </div>
                     <div class="flex items-center justify-between mt-auto">
                         <span class="text-xl font-bold text-red-600">R$ ${item.price.toFixed(2)}</span>
@@ -241,14 +298,19 @@
 
         // Função para renderizar o menu completo
         function renderMenu() {
-            menuData.tachittes.forEach(item => renderMenuItem(item, tachittesList));
+            tachittesList.innerHTML = '';
+            docesList.innerHTML = '';
+            bebidasList.innerHTML = '';
+            
+            menuData.tachittes.filter(item => item.type === 'salty').forEach(item => renderMenuItem(item, tachittesList));
+            menuData.tachittes.filter(item => item.type === 'sweet').forEach(item => renderMenuItem(item, docesList));
             menuData.bebidas.forEach(item => renderMenuItem(item, bebidasList));
         }
 
         // Função para renderizar os ingredientes no modal de customização
         function renderIngredients() {
             ingredientsList.innerHTML = menuData.ingredientes.map(ing => `
-                <label class="flex items-center space-x-2 p-2 border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition-colors">
+                <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
                     <input type="checkbox" data-id="${ing.id}" data-name="${ing.name}" class="ing-checkbox rounded text-red-500 focus:ring-red-500">
                     <span class="text-sm">${ing.name}</span>
                 </label>
@@ -263,7 +325,7 @@
             let total = 0;
 
             if (state.cart.length === 0) {
-                cartItemsList.innerHTML = '<p class="text-gray-500 text-center">Seu carrinho está vazio.</p>';
+                cartItemsList.innerHTML = '<p class="text-red-400 text-center">Seu carrinho está vazio.</p>';
                 checkoutButton.disabled = true;
                 checkoutButton.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
@@ -279,15 +341,15 @@
                             <div class="flex items-center space-x-4">
                                 <img src="${item.img}" alt="${item.name}" class="w-16 h-16 object-cover rounded-md">
                                 <div>
-                                    <h4 class="font-bold text-gray-800">${item.name}</h4>
-                                    ${item.ingredients ? `<p class="text-sm text-gray-500">Ingredientes: ${item.ingredients.join(', ')}</p>` : ''}
-                                    <span class="text-gray-600">R$ ${item.price.toFixed(2)}</span>
+                                    <h4 class="font-bold text-red-900">${item.name}</h4>
+                                    ${item.ingredients ? `<p class="text-sm text-red-400">Ingredientes: ${item.ingredients.join(', ')}</p>` : ''}
+                                    <span class="text-red-600">R$ ${item.price.toFixed(2)}</span>
                                 </div>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <button class="update-quantity-btn w-6 h-6 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center" data-index="${index}" data-action="decrease">-</button>
+                                <button class="update-quantity-btn w-6 h-6 rounded-full bg-red-200 text-red-600 flex items-center justify-center" data-index="${index}" data-action="decrease">-</button>
                                 <span class="font-bold">${item.quantity}</span>
-                                <button class="update-quantity-btn w-6 h-6 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center" data-index="${index}" data-action="increase">+</button>
+                                <button class="update-quantity-btn w-6 h-6 rounded-full bg-red-200 text-red-600 flex items-center justify-center" data-index="${index}" data-action="increase">+</button>
                                 <button class="remove-from-cart-btn text-red-500 hover:text-red-700 transition-colors" data-index="${index}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                                 </button>
@@ -303,7 +365,7 @@
             if (state.isDelivery) {
                 finalTotal += state.deliveryFee;
                 const deliveryFeeHtml = `
-                    <div class="flex justify-between text-sm text-gray-500 mt-2">
+                    <div class="flex justify-between text-sm text-red-400 mt-2">
                         <span>Taxa de Entrega:</span>
                         <span>R$ ${state.deliveryFee.toFixed(2)}</span>
                     </div>
@@ -325,6 +387,100 @@
             }
             updateCartView();
             showStatusMessage(`${item.name} adicionado ao carrinho!`);
+        }
+        
+        // Função para alternar entre as abas
+        function showTab(tabId) {
+            menuSections.forEach(section => {
+                section.classList.add('hidden');
+            });
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            document.querySelector(`#${tabId.replace('-menu', '-tab')}`).classList.add('active');
+        }
+
+        // Geração de imagens com IA e renderização do menu
+        async function generateAndRenderImages() {
+            imageLoader.classList.remove('hidden');
+
+            const imagePrompts = {
+                // Tachittes Salgados
+                't1': 'A high-quality, vibrant photograph of a Tachitte, a sushi roll that is twice the size and much fatter, containing seaweed, rice, carrots, and a savory protein. Presented on a modern, elegant plate.',
+                't2': 'A professional product photo of a fat sushi roll (Tachitte) with bacon slices. The roll is perfectly shaped and garnished, set on a clean, light background.',
+                't3': 'A close-up, high-quality image of a larger, fatter sushi roll (Tachitte) filled with generous slices of pepperoni, showing the texture and detail. Studio lighting.',
+                't4': 'A realistic photo of a large sushi-like roll, the Tachitte, filled with sliced sausages. The image is bright and appetizing, with focus on the main ingredients.',
+                't5': 'An artistic photograph of a large, cheese-filled sushi roll, the Tachitte, with melted mozzarella spilling out. The background is simple to emphasize the product.',
+                't6': 'A high-resolution photograph of a vegan Tachitte, a large sushi roll made with brown rice, seaweed, carrots, and tofu. The composition is fresh and appealing.',
+                't10': 'A creative and vibrant photograph of a custom Tachitte, a large sushi roll bursting with a variety of colorful and interesting ingredients. The presentation is unique.',
+                
+                // Tachittes Doces
+                't7': 'A stylized, mouth-watering photograph of a sweet Tachitte, a large sushi-like roll, filled with guava paste and melted cheese. The photo highlights the unique dessert combination.',
+                't8': 'A delicious product photo of a dessert Tachitte, a large sushi roll filled with rich milk chocolate and white chocolate. The image is warm, inviting, and tempting.',
+                't9': 'An appealing, high-quality image of a dessert Tachitte, a large sushi roll, drizzled with sweet caramel sauce. The photo is taken in a way that emphasizes the smooth texture of the caramel.',
+
+                // Bebidas
+                'b1': 'A professional product photo of a tall glass of freshly squeezed orange juice with ice cubes and an orange slice as garnish. The background is clean and bright.',
+                'b2': 'A high-quality photograph of a glass of natural lemon juice with ice, garnished with a lemon wedge. The glass is clear and shows the vibrant color of the juice.',
+                'b3': 'A realistic photo of a clear glass filled with natural tangerine juice, capturing its bright orange color and a refreshing look.',
+                'b4': 'A close-up, appetizing photo of a glass of fresh strawberry juice, showing its deep red color and smooth texture. A few fresh strawberries are in the background.',
+                'b5': 'An elegant product shot of a glass of natural apple juice, with a slice of apple on the rim. The lighting is soft and natural.',
+                'b6': 'A beautiful, high-resolution image of a glass of grape juice, showing the rich purple color. The photo has a slightly blurred background to focus on the drink.',
+                'b7': 'A commercial product photo of a generic, red-colored soda can with condensation, placed on a simple, modern surface. The perspective is from a slightly low angle.',
+                'b8': 'A professional photo of a generic red soda bottle (600ml), capturing the condensation and sparkling bubbles inside. Clean, studio background.',
+                'b9': 'A full-size, professional photo of a generic red soda bottle (2 liters) on a minimalist table. The lighting emphasizes the product’s size and refreshing look.'
+            };
+
+            const imagePromises = Object.keys(imagePrompts).map(async id => {
+                const prompt = imagePrompts[id];
+                const maxRetries = 3;
+                let attempt = 0;
+                while (attempt < maxRetries) {
+                    try {
+                        const payload = { instances: { prompt: prompt }, parameters: { "sampleCount": 1} };
+                        const apiKey = "";
+                        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+                        
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const result = await response.json();
+                        
+                        if (result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                            const base64Data = result.predictions[0].bytesBase64Encoded;
+                            const imageUrl = `data:image/png;base64,${base64Data}`;
+                            
+                            // Encontra o item correspondente e atualiza a URL da imagem
+                            const item = menuData.tachittes.find(t => t.id === id) || menuData.bebidas.find(b => b.id === id);
+                            if (item) {
+                                item.img = imageUrl;
+                            }
+                            return; // Sai do loop se a imagem for gerada com sucesso
+                        } else {
+                            throw new Error('No image data in API response');
+                        }
+                    } catch (error) {
+                        attempt++;
+                        console.error(`Tentativa ${attempt} falhou para ${id}:`, error);
+                        if (attempt < maxRetries) {
+                            const delay = Math.pow(2, attempt) * 1000; // Atraso exponencial
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                        } else {
+                            console.error(`Falha ao gerar imagem para ${id} após ${maxRetries} tentativas.`);
+                        }
+                    }
+                }
+            });
+
+            await Promise.all(imagePromises);
+
+            renderMenu();
+            imageLoader.classList.add('hidden');
+            showStatusMessage('Imagens geradas com sucesso!', 'success');
         }
 
         // Manipuladores de eventos
@@ -401,7 +557,7 @@
                     description: `Com ${selectedIngredients.join(', ')}.`,
                     ingredients: selectedIngredients,
                     price: menuData.tachittes.find(t => t.isCustom).price,
-                    img: 'https://placehold.co/400x300/f3f4f6/333?text=Custom'
+                    img: 'https://placehold.co/400x300/fef2f2/333?text=Custom'
                 };
                 state.cart.push({ ...customTachitte, quantity: 1 });
                 customizeModal.classList.add('hidden');
@@ -424,8 +580,8 @@
                 state.isDelivery = true;
                 deliveryOptionBtn.classList.add('border-red-500', 'bg-red-500', 'text-white');
                 pickupOptionBtn.classList.remove('border-red-500', 'bg-red-500', 'text-white');
-                deliveryOptionBtn.classList.remove('border-gray-300', 'bg-white', 'text-gray-700');
-                pickupOptionBtn.classList.add('border-gray-300', 'bg-white', 'text-gray-700');
+                deliveryOptionBtn.classList.remove('border-red-300', 'bg-white', 'text-red-800');
+                pickupOptionBtn.classList.add('border-red-300', 'bg-white', 'text-red-800');
                 updateCartView();
                 showStatusMessage('Opção de Entrega selecionada. Taxa de R$ 5.00 será adicionada.');
             }
@@ -433,16 +589,31 @@
                 state.isDelivery = false;
                 pickupOptionBtn.classList.add('border-red-500', 'bg-red-500', 'text-white');
                 deliveryOptionBtn.classList.remove('border-red-500', 'bg-red-500', 'text-white');
-                pickupOptionBtn.classList.remove('border-gray-300', 'bg-white', 'text-gray-700');
-                deliveryOptionBtn.classList.add('border-gray-300', 'bg-white', 'text-gray-700');
+                pickupOptionBtn.classList.remove('border-red-300', 'bg-white', 'text-red-800');
+                deliveryOptionBtn.classList.add('border-red-300', 'bg-white', 'text-red-800');
                 updateCartView();
                 showStatusMessage('Opção de Retirada selecionada. Sem taxa adicional.');
             }
-        });
 
+            // Alternar entre as abas
+            if (e.target.closest('#salgados-tab')) {
+                showTab('salgados-menu');
+            }
+            if (e.target.closest('#doces-tab')) {
+                showTab('doces-menu');
+            }
+            if (e.target.closest('#bebidas-tab')) {
+                showTab('bebidas-menu');
+            }
+        });
+        
         // Inicializa a aplicação
-        renderMenu();
-        updateCartView();
+        document.addEventListener('DOMContentLoaded', () => {
+            renderMenu();
+            updateCartView();
+            showTab('salgados-menu');
+            generateAndRenderImages();
+        });
     </script>
 </body>
 </html>
