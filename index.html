@@ -709,9 +709,21 @@
 
         // Adicionar um listener para evitar que o modal feche quando interage com inputs
         checkoutModal.addEventListener('click', (e) => {
-            if (!e.target.closest('.bg-white.rounded-lg')) {
+             // Se o clique for no botão de fechar, fecha o modal
+            if (e.target.closest('#close-checkout-modal')) {
                 checkoutModal.classList.add('hidden');
                 resetCheckoutForm();
+                return;
+            }
+            // Se o clique for no overlay (fundo escuro), fecha o modal
+            if (e.target === checkoutModal) {
+                checkoutModal.classList.add('hidden');
+                resetCheckoutForm();
+                return;
+            }
+            // Impede a propagação do evento para inputs e botões dentro do modal
+            if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'button') {
+                e.stopPropagation();
             }
         });
 
