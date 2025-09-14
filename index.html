@@ -226,15 +226,15 @@
                 <div>
                     <h3 class="font-bold text-red-900 mb-2">Forma de Pagamento</h3>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <label class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                        <label class="payment-method-label flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
                             <input type="radio" name="payment-method" value="PIX" class="payment-method-radio accent-red-500" checked>
                             <span>PIX</span>
                         </label>
-                        <label id="card-option" class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                        <label id="card-option" class="payment-method-label flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
                             <input type="radio" name="payment-method" value="Cartões" class="payment-method-radio accent-red-500">
                             <span>Cartões</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                        <label id="money-option" class="payment-method-label flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
                             <input type="radio" name="payment-method" value="Dinheiro" class="payment-method-radio accent-red-500">
                             <span>Dinheiro</span>
                         </label>
@@ -258,6 +258,14 @@
                         <span>Alimentação</span>
                     </div>
                 </div>
+                <div id="money-change-options" class="space-y-4 hidden">
+                    <h3 class="font-bold text-red-900">Troco para quanto?</h3>
+                    <div>
+                        <label for="money-value" class="block text-sm font-medium text-red-900">Valor do dinheiro</label>
+                        <input type="number" id="money-value" class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-2" placeholder="Ex: 50.00">
+                    </div>
+                    <p id="change-value" class="text-sm font-medium text-red-900"></p>
+                </div>
                 <div id="delivery-info" class="space-y-4 hidden">
                     <h3 class="font-bold text-red-900">Dados para Entrega</h3>
                     <div>
@@ -278,46 +286,14 @@
         </div>
     </div>
 
-    <script>
-        // Dados do menu com as imagens locais
-        const menuData = {
-            tachittes: [
-                { id: 't1', name: 'Tradicional', description: 'Uma explosão de sabor com nossa base tradicional: arroz, alga, cenoura e proteína (peixe ou carne).', price: 15.00, img: 'images/tradicional.png', type: 'salty' },
-                { id: 't2', name: 'Bacon', description: 'A nossa receita clássica de tachitte com a irresistível adição de fatias crocantes de bacon.', price: 18.00, img: 'images/bacon.png', type: 'salty' },
-                { id: 't3', name: 'Pepperone', description: 'Um toque picante e defumado com a nossa receita padrão e generosas fatias de pepperoni.', price: 18.00, img: 'images/pepperone.png', type: 'salty' },
-                { id: 't4', name: 'Salsicha', description: 'Saboroso e reconfortante: o tachitte tradicional com fatias de salsicha.', price: 17.00, img: 'images/salsicha.png', type: 'salty' },
-                { id: 't5', name: 'Queijo', description: 'Para os amantes de queijo: a receita padrão com mussarela derretida e picada por toda parte.', price: 17.00, img: 'images/queijo.png', type: 'salty' },
-                { id: 't6', name: 'Vegano', description: 'Nossa opção deliciosa e 100% à base de plantas. Leca arroz integral, algas, cenoura e tofu no lugar da proteína animal.', price: 19.00, img: 'images/vegano.png', type: 'salty' },
-                { id: 't7', name: 'Romeu e Julieta', description: 'Um clássico reinventado! A base de tachitte salgada encontra a doçura da goiabada e o sabor suave do queijo mussarela.', price: 16.00, img: 'images/romeu-e-julieta.png', type: 'sweet' },
-                { id: 't8', name: 'Chocolate', description: 'O paraíso para os apaixonados por doces. O tachitte tradicional com um recheio generoso de chocolate ao leite ou branco.', price: 18.00, img: 'images/chocolate.png', type: 'sweet' },
-                { id: 't9', name: 'Caramelo', description: 'Uma combinação surpreendente de sabores! A nossa receita clássica finalizada com a doçura e textura do caramelo.', price: 18.00, img: 'images/caramelo.png', type: 'sweet' },
-                { id: 't10', name: 'Customizado', description: 'Liberte sua criatividade! Monte seu próprio tachitte único com até 5 ingredientes da sua escolha.', price: 20.00, img: 'images/customizado.png', isCustom: true, type: 'salty' }
-            ],
-            bebidas: [
-                { id: 'b1', name: 'Suco de Laranja', description: 'Suco natural de laranja.', price: 7.00, img: 'images/suco-laranja.png', type: 'suco' },
-                { id: 'b2', name: 'Suco de Limão', description: 'Suco natural de limão.', price: 7.00, img: 'images/suco-limao.png', type: 'suco' },
-                { id: 'b3', name: 'Suco de Tangerina', description: 'Suco natural de tangerina.', price: 7.00, img: 'images/suco-tangerina.png', type: 'suco' },
-                { id: 'b4', name: 'Suco de Morango', description: 'Suco natural de morango.', price: 8.00, img: 'images/suco-morango.png', type: 'suco' },
-                { id: 'b5', name: 'Suco de Maçã', description: 'Suco natural de maçã.', price: 8.00, img: 'images/suco-maca.png', type: 'suco' },
-                { id: 'b6', name: 'Suco de Uva', description: 'Suco natural de uva.', price: 8.00, img: 'images/suco-uva.png', type: 'suco' },
-                { id: 'b7', name: 'Refrigerante Lata', description: 'Refrigerante em lata.', price: 6.00, img: 'images/refri-lata.png', type: 'refri' },
-                { id: 'b8', name: 'Refrigerante 600ml', description: 'Refrigerante garrafa 600ml.', price: 8.00, img: 'images/refri-600ml.png', type: 'refri' },
-                { id: 'b9', name: 'Refrigerante 2L', description: 'Refrigerante garrafa 2 litros.', price: 12.00, img: 'images/refri-2l.png', type: 'refri' }
-            ],
-            ingredientes: [
-                { id: 'i1', name: 'Algas' }, { id: 'i2', name: 'Arroz' }, { id: 'i3', name: 'Cenoura' },
-                { id: 'i4', name: 'Peixe' }, { id: 'i5', name: 'Carne' }, { id: 'i6', name: 'Tofu' },
-                { id: 'i7', name: 'Bacon' }, { id: 'i8', name: 'Pepperone' }, { id: 'i9', name: 'Salsicha' },
-                { id: 'i10', name: 'Queijo' }, { id: 'i11', name: 'Goiabada' }, { id: 'i12', name: 'Chocolate' },
-                { id: 'i13', name: 'Caramelo' }
-            ]
-        };
+    <script type="module">
+        import { menuData, settings } from 'data.js';
 
         // Estado global do app
         const state = {
             cart: [],
             isDelivery: false,
-            deliveryFee: 5.00
+            deliveryFee: settings.deliveryFee
         };
 
         // Seletores do DOM
@@ -345,6 +321,9 @@
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
         const cardSubOptionsDiv = document.getElementById('card-sub-options');
+        const moneyChangeOptionsDiv = document.getElementById('money-change-options');
+        const moneyValueInput = document.getElementById('money-value');
+        const changeValueP = document.getElementById('change-value');
         
 
         // Função para mostrar mensagem de feedback
@@ -594,42 +573,47 @@
 
             // Enviar pedido para o WhatsApp
             if (e.target.closest('#send-whatsapp-button')) {
+                const total = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
                 let paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
                 const cardTypeRadio = document.querySelector('input[name="card-type"]:checked');
+                
                 if (paymentMethod === 'Cartões' && cardTypeRadio) {
                     paymentMethod += ` - ${cardTypeRadio.value}`;
                 }
 
+                if (paymentMethod === 'Dinheiro') {
+                    const moneyValue = parseFloat(moneyValueInput.value);
+                    if (isNaN(moneyValue) || moneyValue < total) {
+                        showStatusMessage('O valor em dinheiro é insuficiente para o pagamento.', 'error');
+                        return;
+                    }
+                    const change = moneyValue - total;
+                    paymentMethod += ` (Troco para R$ ${moneyValue.toFixed(2)} - Troco de R$ ${change.toFixed(2)})`;
+                }
+
                 const deliveryAddress = document.getElementById('address').value;
                 const clientPhone = document.getElementById('phone').value;
-
+                
                 let message = `Olá! Gostaria de fazer o seguinte pedido:\n\n*Pedido*\n`;
 
-                let total = 0;
                 state.cart.forEach(item => {
                     message += `- ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2)})\n`;
                     if (item.ingredients) {
                         message += `  > Ingredientes: ${item.ingredients.join(', ')}\n`;
                     }
-                    total += item.price * item.quantity;
                 });
                 
                 message += `\n*Forma de Pedido: ${state.isDelivery ? 'Entrega' : 'Retirada'}*\n`;
                 if (state.isDelivery) {
-                    total += state.deliveryFee;
                     message += `*Taxa de Entrega: R$ ${state.deliveryFee.toFixed(2)}*\n`;
-                }
-
-                message += `*Total: R$ ${total.toFixed(2)}*\n`;
-                message += `\n*Forma de Pagamento: ${paymentMethod}*\n`;
-
-                if (state.isDelivery) {
                     message += `*Endereço de Entrega: ${deliveryAddress}*\n`;
                     message += `*Telefone: ${clientPhone}*\n`;
                 }
-                
-                const phoneNumber = '5511996747477'; // Substitua pelo seu número de telefone do WhatsApp
-                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+                message += `\n*Total: R$ ${total.toFixed(2)}*\n`;
+                message += `*Forma de Pagamento: ${paymentMethod}*\n`;
+
+                const whatsappUrl = `https://wa.me/${settings.whatsappNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
 
                 // Limpa o carrinho e fecha o modal
@@ -669,14 +653,36 @@
                 showTab('bebidas-menu');
             }
             
-            // Mostrar/ocultar opções de cartão
+            // Mostrar/ocultar sub-opções de pagamento
             if (e.target.closest('.payment-method-radio[value="Cartões"]')) {
                 cardSubOptionsDiv.classList.remove('hidden');
-            } else if (e.target.closest('.payment-method-radio')) {
+                moneyChangeOptionsDiv.classList.add('hidden');
+            } else if (e.target.closest('.payment-method-radio[value="Dinheiro"]')) {
+                moneyChangeOptionsDiv.classList.remove('hidden');
                 cardSubOptionsDiv.classList.add('hidden');
+            } else {
+                cardSubOptionsDiv.classList.add('hidden');
+                moneyChangeOptionsDiv.classList.add('hidden');
             }
         });
         
+        // Listener para o campo de valor do dinheiro
+        moneyValueInput.addEventListener('input', () => {
+            const total = parseFloat(document.getElementById('cart-total').textContent.replace('R$', ''));
+            const moneyValue = parseFloat(moneyValueInput.value);
+
+            if (!isNaN(moneyValue) && moneyValue >= total) {
+                const change = moneyValue - total;
+                changeValueP.textContent = `Troco a ser devolvido: R$ ${change.toFixed(2)}`;
+                changeValueP.classList.remove('text-red-500');
+            } else if (!isNaN(moneyValue) && moneyValue < total) {
+                changeValueP.textContent = 'Valor insuficiente!';
+                changeValueP.classList.add('text-red-500');
+            } else {
+                changeValueP.textContent = '';
+            }
+        });
+
         // Inicializa a aplicação e registra o Service Worker
         document.addEventListener('DOMContentLoaded', () => {
             renderMenu();
