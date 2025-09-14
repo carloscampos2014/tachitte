@@ -325,6 +325,9 @@
         const moneyValueInput = document.getElementById('money-value');
         const changeValueP = document.getElementById('change-value');
         
+        // Elementos de rádio
+        const paymentMethodRadios = document.querySelectorAll('.payment-method-radio');
+
 
         // Função para mostrar mensagem de feedback
         function showStatusMessage(message, type = 'success') {
@@ -536,11 +539,6 @@
                 }
                 checkoutModal.classList.remove('hidden');
             }
-            if (e.target.closest('#close-checkout-modal')) {
-                checkoutModal.classList.add('hidden');
-                // Limpa os dados do formulário ao fechar o modal
-                resetCheckoutForm();
-            }
             
             // Alterar quantidade no carrinho
             if (e.target.closest('.update-quantity-btn')) {
@@ -706,8 +704,8 @@
                 changeValueP.textContent = '';
             }
         });
-
-        // Adicionar um listener para evitar que o modal feche quando interage com inputs
+        
+        // Adiciona um listener para o modal de checkout para impedir o fechamento em cliques internos
         checkoutModal.addEventListener('click', (e) => {
              // Se o clique for no botão de fechar, fecha o modal
             if (e.target.closest('#close-checkout-modal')) {
@@ -726,6 +724,7 @@
                 e.stopPropagation();
             }
         });
+
 
         // Inicializa a aplicação e registra o Service Worker
         document.addEventListener('DOMContentLoaded', () => {
