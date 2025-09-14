@@ -2,7 +2,7 @@
     "name": "Tachitte",
     "short_name": "Tachitte",
     "description": "Aplicativo PWA para o restaurante Tachitte.",
-    "start_url": "/",
+    "start_url": "/tachitte/",
     "display": "standalone",
     "background_color": "#fef2f2",
     "theme_color": "#dc2626",
