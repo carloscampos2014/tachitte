@@ -262,7 +262,7 @@
                     <h3 class="font-bold text-red-900">Troco para quanto?</h3>
                     <div>
                         <label for="money-value" class="block text-sm font-medium text-red-900">Valor do dinheiro</label>
-                        <input type="number" id="money-value" class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-2" placeholder="Ex: 50.00">
+                        <input type="number" id="money-value" class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-2" placeholder="Ex: 50.00" min="0">
                     </div>
                     <p id="change-value" class="text-sm font-medium text-red-900"></p>
                 </div>
@@ -680,6 +680,13 @@
                 changeValueP.classList.add('text-red-500');
             } else {
                 changeValueP.textContent = '';
+            }
+        });
+
+        // Adicionar um listener para evitar que o modal feche quando interage com inputs
+        checkoutModal.addEventListener('click', (e) => {
+            if (e.target.tagName.toLowerCase() === 'input') {
+                e.stopPropagation();
             }
         });
 
