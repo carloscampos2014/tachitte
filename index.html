@@ -213,6 +213,53 @@
         </div>
     </div>
 
+    <!-- Novo Modal de Pagamento e Envio -->
+    <div id="checkout-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
+            <div class="flex justify-between items-center border-b pb-4 mb-4">
+                <h2 class="text-2xl font-bold text-red-900">Finalizar Pedido</h2>
+                <button id="close-checkout-modal" class="text-red-400 hover:text-red-900 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <h3 class="font-bold text-red-900 mb-2">Forma de Pagamento</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <label class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                            <input type="radio" name="payment-method" value="PIX" class="payment-method-radio accent-red-500" checked>
+                            <span>PIX</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                            <input type="radio" name="payment-method" value="Cartões" class="payment-method-radio accent-red-500">
+                            <span>Cartões</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                            <input type="radio" name="payment-method" value="Dinheiro" class="payment-method-radio accent-red-500">
+                            <span>Dinheiro</span>
+                        </label>
+                    </div>
+                </div>
+                <div id="delivery-info" class="space-y-4 hidden">
+                    <h3 class="font-bold text-red-900">Dados para Entrega</h3>
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-red-900">Endereço</label>
+                        <input type="text" id="address" class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-2" placeholder="Rua, Número, Bairro">
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-red-900">Telefone</label>
+                        <input type="tel" id="phone" class="mt-1 block w-full rounded-md border-red-300 shadow-sm focus:border-red-500 focus:ring-red-500 p-2" placeholder="(XX) XXXXX-XXXX">
+                    </div>
+                </div>
+                <div class="border-t pt-4">
+                    <button id="send-whatsapp-button" class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors btn-animate">
+                        Enviar Pedido por WhatsApp
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Dados do menu com as imagens locais
         const menuData = {
@@ -273,6 +320,12 @@
         const statusMessage = document.getElementById('status-message');
         const tabButtons = document.querySelectorAll('.tab-button');
         const menuSections = document.querySelectorAll('.menu-tab');
+        const checkoutModal = document.getElementById('checkout-modal');
+        const closeCheckoutModal = document.getElementById('close-checkout-modal');
+        const deliveryInfoDiv = document.getElementById('delivery-info');
+        const sendWhatsappButton = document.getElementById('send-whatsapp-button');
+        const phoneInput = document.getElementById('phone');
+        const addressInput = document.getElementById('address');
         
 
         // Função para mostrar mensagem de feedback
@@ -377,15 +430,22 @@
 
             // Adiciona a taxa de entrega se a opção estiver selecionada
             let finalTotal = total;
+            const deliveryFeeElement = document.getElementById('delivery-fee-row');
             if (state.isDelivery) {
                 finalTotal += state.deliveryFee;
-                const deliveryFeeHtml = `
-                    <div class="flex justify-between text-sm text-red-400 mt-2">
-                        <span>Taxa de Entrega:</span>
-                        <span>R$ ${state.deliveryFee.toFixed(2)}</span>
-                    </div>
-                `;
-                cartItemsList.innerHTML += deliveryFeeHtml;
+                if (!deliveryFeeElement) {
+                    const deliveryFeeHtml = `
+                        <div id="delivery-fee-row" class="flex justify-between text-sm text-red-400 mt-2">
+                            <span>Taxa de Entrega:</span>
+                            <span>R$ ${state.deliveryFee.toFixed(2)}</span>
+                        </div>
+                    `;
+                    cartItemsList.innerHTML += deliveryFeeHtml;
+                }
+            } else {
+                if (deliveryFeeElement) {
+                    deliveryFeeElement.remove();
+                }
             }
 
             cartTotal.textContent = `R$ ${finalTotal.toFixed(2)}`;
@@ -450,6 +510,20 @@
                 customizeModal.classList.add('hidden');
             }
 
+            // Abrir e fechar o modal de checkout
+            if (e.target.closest('#checkout-button')) {
+                cartModal.classList.add('hidden');
+                if (state.isDelivery) {
+                    deliveryInfoDiv.classList.remove('hidden');
+                } else {
+                    deliveryInfoDiv.classList.add('hidden');
+                }
+                checkoutModal.classList.remove('hidden');
+            }
+            if (e.target.closest('#close-checkout-modal')) {
+                checkoutModal.classList.add('hidden');
+            }
+
             // Alterar quantidade no carrinho
             if (e.target.closest('.update-quantity-btn')) {
                 const button = e.target.closest('.update-quantity-btn');
@@ -499,14 +573,45 @@
                 showStatusMessage('Tachitte customizado adicionado ao carrinho!');
             }
 
-            // Finalizar pedido
-            if (e.target.closest('#checkout-button')) {
-                if (state.cart.length > 0) {
-                    showStatusMessage('Pedido finalizado com sucesso! Em breve entraremos em contato.', 'success');
-                    state.cart = []; // Limpa o carrinho
-                    updateCartView();
-                    cartModal.classList.add('hidden');
+            // Enviar pedido para o WhatsApp
+            if (e.target.closest('#send-whatsapp-button')) {
+                const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                const deliveryAddress = document.getElementById('address').value;
+                const clientPhone = document.getElementById('phone').value;
+
+                let message = `Olá! Gostaria de fazer o seguinte pedido:\n\n*Pedido*\n`;
+
+                let total = 0;
+                state.cart.forEach(item => {
+                    message += `- ${item.quantity}x ${item.name} (R$ ${item.price.toFixed(2)})\n`;
+                    if (item.ingredients) {
+                        message += `  > Ingredientes: ${item.ingredients.join(', ')}\n`;
+                    }
+                    total += item.price * item.quantity;
+                });
+                
+                message += `\n*Forma de Pedido: ${state.isDelivery ? 'Entrega' : 'Retirada'}*\n`;
+                if (state.isDelivery) {
+                    total += state.deliveryFee;
+                    message += `*Taxa de Entrega: R$ ${state.deliveryFee.toFixed(2)}*\n`;
                 }
+
+                message += `*Total: R$ ${total.toFixed(2)}*\n`;
+                message += `\n*Forma de Pagamento: ${paymentMethod}*\n`;
+
+                if (state.isDelivery) {
+                    message += `*Endereço de Entrega: ${deliveryAddress}*\n`;
+                    message += `*Telefone: ${clientPhone}*\n`;
+                }
+                
+                const phoneNumber = '55119967477477'; // Substitua pelo seu número de telefone do WhatsApp
+                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+                window.open(whatsappUrl, '_blank');
+
+                // Limpa o carrinho e fecha o modal
+                state.cart = [];
+                updateCartView();
+                checkoutModal.classList.add('hidden');
             }
 
             // Opções de entrega/retirada
