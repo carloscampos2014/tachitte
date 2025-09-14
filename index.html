@@ -549,7 +549,9 @@
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('/service-worker.js')
+                    const ghPath = '/'; // Altere para o nome do seu repositório, se não for a raiz
+                    const swPath = `${ghPath}service-worker.js`;
+                    navigator.serviceWorker.register(swPath, { scope: ghPath })
                         .then(reg => {
                             console.log('Service Worker registrado com sucesso. Escopo: ' + reg.scope);
                         }).catch(error => {
