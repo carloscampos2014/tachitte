@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tachitte</title>
     <!-- Configurações PWA -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#dc2626">
 
     <!-- Tailwind CSS -->
@@ -549,9 +549,15 @@
 
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    const ghPath = '/'; // Altere para o nome do seu repositório, se não for a raiz
-                    const swPath = `${ghPath}service-worker.js`;
-                    navigator.serviceWorker.register(swPath, { scope: ghPath })
+                    // O nome do repositório no GitHub Pages. Se estiver na raiz, use ''.
+                    const repoName = '/tachitte'; 
+                    const swPath = `${repoName}/service-worker.js`;
+                    const manifestPath = `${repoName}/manifest.json`;
+
+                    // Altera o caminho do manifesto
+                    document.querySelector('link[rel="manifest"]').href = manifestPath;
+
+                    navigator.serviceWorker.register(swPath, { scope: repoName })
                         .then(reg => {
                             console.log('Service Worker registrado com sucesso. Escopo: ' + reg.scope);
                         }).catch(error => {
