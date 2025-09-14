@@ -230,7 +230,7 @@
                             <input type="radio" name="payment-method" value="PIX" class="payment-method-radio accent-red-500" checked>
                             <span>PIX</span>
                         </label>
-                        <label class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
+                        <label id="card-option" class="flex items-center space-x-2 p-3 border border-red-300 rounded-lg cursor-pointer has-[:checked]:bg-red-50 has-[:checked]:border-red-500">
                             <input type="radio" name="payment-method" value="Cartões" class="payment-method-radio accent-red-500">
                             <span>Cartões</span>
                         </label>
@@ -238,6 +238,24 @@
                             <input type="radio" name="payment-method" value="Dinheiro" class="payment-method-radio accent-red-500">
                             <span>Dinheiro</span>
                         </label>
+                    </div>
+                </div>
+                <div id="card-sub-options" class="space-y-2 pl-4 hidden">
+                    <div class="flex items-center space-x-2">
+                        <input type="radio" name="card-type" value="Crédito" class="card-type-radio accent-red-500" checked>
+                        <span>Crédito</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="radio" name="card-type" value="Débito" class="card-type-radio accent-red-500">
+                        <span>Débito</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="radio" name="card-type" value="Refeição" class="card-type-radio accent-red-500">
+                        <span>Refeição</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <input type="radio" name="card-type" value="Alimentação" class="card-type-radio accent-red-500">
+                        <span>Alimentação</span>
                     </div>
                 </div>
                 <div id="delivery-info" class="space-y-4 hidden">
@@ -326,6 +344,7 @@
         const sendWhatsappButton = document.getElementById('send-whatsapp-button');
         const phoneInput = document.getElementById('phone');
         const addressInput = document.getElementById('address');
+        const cardSubOptionsDiv = document.getElementById('card-sub-options');
         
 
         // Função para mostrar mensagem de feedback
@@ -523,7 +542,7 @@
             if (e.target.closest('#close-checkout-modal')) {
                 checkoutModal.classList.add('hidden');
             }
-
+            
             // Alterar quantidade no carrinho
             if (e.target.closest('.update-quantity-btn')) {
                 const button = e.target.closest('.update-quantity-btn');
@@ -575,7 +594,12 @@
 
             // Enviar pedido para o WhatsApp
             if (e.target.closest('#send-whatsapp-button')) {
-                const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                let paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+                const cardTypeRadio = document.querySelector('input[name="card-type"]:checked');
+                if (paymentMethod === 'Cartões' && cardTypeRadio) {
+                    paymentMethod += ` - ${cardTypeRadio.value}`;
+                }
+
                 const deliveryAddress = document.getElementById('address').value;
                 const clientPhone = document.getElementById('phone').value;
 
@@ -604,7 +628,7 @@
                     message += `*Telefone: ${clientPhone}*\n`;
                 }
                 
-                const phoneNumber = '55119967477477'; // Substitua pelo seu número de telefone do WhatsApp
+                const phoneNumber = '5511996747477'; // Substitua pelo seu número de telefone do WhatsApp
                 const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
                 window.open(whatsappUrl, '_blank');
 
@@ -643,6 +667,13 @@
             }
             if (e.target.closest('#bebidas-tab')) {
                 showTab('bebidas-menu');
+            }
+            
+            // Mostrar/ocultar opções de cartão
+            if (e.target.closest('.payment-method-radio[value="Cartões"]')) {
+                cardSubOptionsDiv.classList.remove('hidden');
+            } else if (e.target.closest('.payment-method-radio')) {
+                cardSubOptionsDiv.classList.add('hidden');
             }
         });
         
