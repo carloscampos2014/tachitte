@@ -1,0 +1,112 @@
+        /* Estilos personalizados para o PWA */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fef2f2;
+            /* Vermelho pastel claro */
+        }
+
+        /* Gradiente de fundo suave para o cabeçalho */
+        .header-bg {
+            background-color: #dc2626;
+        }
+
+        .text-tachitte {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px #b91c1c;
+        }
+
+        /* Estilo para a animação do botão */
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .btn-animate {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Ocultar o scrollbar, mantendo a funcionalidade de rolagem */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        /* Estilo para o modal */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+
+        .tab-button.active {
+            border-bottom: 3px solid #dc2626;
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        /* Estilos adicionais para o novo layout das abas e imagens */
+        .tab-button {
+            flex-grow: 1;
+            flex-basis: 0;
+        }
+
+        .menu-item-image {
+            height: 200px;
+            /* Aumenta a altura das imagens */
+            object-fit: cover;
+        }
+
+        /* Estilos para a seção 'O que são Tachittes?' */
+        .about-tachitte {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .about-tachitte img {
+            max-width: 200px;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .about-tachitte {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Novo estilo para organizar as opções de pagamento no modal */
+        .payment-options-container {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .payment-options-container>div {
+            border: 1px solid #fca5a5;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .payment-options-container .payment-method-radio:checked+span {
+            font-weight: bold;
+        }
+
+        .payment-options-container>div.active {
+            background-color: #fef2f2;
+            border-color: #dc2626;
+        }

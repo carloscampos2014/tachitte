@@ -15,126 +15,10 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <!-- Biblioteca para gerar QR Code do Pix -->
     <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-
-    <style>
-        /* Estilos personalizados para o PWA */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fef2f2;
-            /* Vermelho pastel claro */
-        }
-
-        /* Gradiente de fundo suave para o cabeçalho */
-        .header-bg {
-            background-color: #dc2626;
-        }
-
-        .text-tachitte {
-            font-size: 2.5rem;
-            text-shadow: 2px 2px #b91c1c;
-        }
-
-        /* Estilo para a animação do botão */
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: scale(1);
-            }
-
-            50% {
-                transform: scale(1.05);
-            }
-        }
-
-        .btn-animate {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        /* Ocultar o scrollbar, mantendo a funcionalidade de rolagem */
-        .hide-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-
-        .hide-scrollbar {
-            -ms-overflow-style: none;
-            /* IE and Edge */
-            scrollbar-width: none;
-            /* Firefox */
-        }
-
-        /* Estilo para o modal */
-        .modal {
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-        }
-
-        .tab-button.active {
-            border-bottom: 3px solid #dc2626;
-            color: #dc2626;
-            font-weight: bold;
-        }
-
-        /* Estilos adicionais para o novo layout das abas e imagens */
-        .tab-button {
-            flex-grow: 1;
-            flex-basis: 0;
-        }
-
-        .menu-item-image {
-            height: 200px;
-            /* Aumenta a altura das imagens */
-            object-fit: cover;
-        }
-
-        /* Estilos para a seção 'O que são Tachittes?' */
-        .about-tachitte {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .about-tachitte img {
-            max-width: 200px;
-            height: auto;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        @media (max-width: 768px) {
-            .about-tachitte {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* Novo estilo para organizar as opções de pagamento no modal */
-        .payment-options-container {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .payment-options-container>div {
-            border: 1px solid #fca5a5;
-            padding: 1rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s;
-        }
-
-        .payment-options-container .payment-method-radio:checked+span {
-            font-weight: bold;
-        }
-
-        .payment-options-container>div.active {
-            background-color: #fef2f2;
-            border-color: #dc2626;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
-
 <body class="bg-red-50 min-h-screen flex flex-col">
 
-    <!-- Cabeçalho -->
     <header class="header-bg text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-3xl font-bold text-white text-tachitte">Tachitte</h1>
@@ -154,10 +38,8 @@
         </div>
     </header>
 
-    <!-- Conteúdo Principal -->
     <main class="flex-grow container mx-auto p-4 md:p-8">
 
-        <!-- Sobre os Tachittes -->
         <div class="bg-white p-4 rounded-lg shadow-md mb-6">
             <h2 class="text-2xl font-bold mb-2 text-red-600 text-center">O que são Tachittes?</h2>
             <div class="about-tachitte">
@@ -172,7 +54,6 @@
             </div>
         </div>
 
-        <!-- Opções de Pedido: Retirar ou Entregar -->
         <div class="bg-white p-4 rounded-lg shadow-md mb-6">
             <h2 class="text-xl font-bold mb-4 text-red-600 text-center">Escolha a opção de pedido</h2>
             <div class="flex space-x-4">
@@ -203,11 +84,9 @@
             </div>
         </div>
 
-        <!-- Mensagem de feedback do usuário -->
         <div id="status-message"
             class="hidden fixed top-24 right-4 bg-red-500 text-white p-4 rounded-lg shadow-xl z-50"></div>
 
-        <!-- Abas de Navegação -->
         <div class="bg-white rounded-lg shadow-md mb-6">
             <div class="flex border-b border-red-300">
                 <button id="salgados-tab"
@@ -221,44 +100,37 @@
             </div>
         </div>
 
-        <!-- Conteúdo das Abas -->
         <section id="salgados-menu" class="menu-tab">
             <h2 class="text-2xl font-bold text-red-600 mb-4">Tachittes Salgados</h2>
             <div id="salgados-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Itens salgados serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
         </section>
 
         <section id="doces-menu" class="menu-tab hidden">
             <h2 class="text-2xl font-bold text-red-600 mb-4">Tachittes Doces</h2>
             <div id="doces-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Itens doces serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
         </section>
 
         <section id="bebidas-menu" class="menu-tab hidden">
             <h2 class="text-2xl font-bold text-red-600 mb-4">Bebidas</h2>
             <div id="bebidas-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Itens de bebidas serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
         </section>
 
         <section id="combos-menu" class="menu-tab hidden">
             <h2 class="text-2xl font-bold text-red-600 mb-4">Combos</h2>
             <div id="combos-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Itens de combos serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
         </section>
 
     </main>
 
-    <!-- Aviso de Conteúdo Fictício -->
     <div class="text-center text-xs text-red-400 mt-8 mb-4 px-4">
         Este site, incluindo todos os produtos e o restaurante Tachitte, é fictício e foi criado apenas para fins de
         demonstração.
     </div>
 
-    <!-- Modal do Carrinho -->
     <div id="cart-modal" class="modal fixed inset-0 flex items-center justify-y-end p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -273,22 +145,20 @@
                 </button>
             </div>
             <div id="cart-items" class="space-y-4">
-                <!-- Itens do carrinho serão inseridos aqui -->
-            </div>
+                </div>
             <div class="border-t pt-4 mt-4">
                 <div class="flex justify-between font-bold text-lg mb-2">
                     <span>Total:</span>
                     <span id="cart-total">R$ 0.00</span>
                 </div>
                 <button id="checkout-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600 transition-colors btn-animate">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors btn-animate">
                     Finalizar Pedido
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Novo Modal de Escolha de Tamanho -->
     <div id="size-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -303,18 +173,16 @@
                 </button>
             </div>
             <div id="size-options" class="space-y-4">
-                <!-- Opções de tamanho serão inseridas aqui via JS -->
-            </div>
+                </div>
             <div class="border-t pt-4 mt-4">
                 <button id="next-size-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Próximo
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Novo Modal para Escolha de Proteína -->
     <div id="protein-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -344,14 +212,13 @@
             </div>
             <div class="border-t pt-4 mt-4">
                 <button id="next-protein-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Próximo
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Novo Modal para Toppings Doces -->
     <div id="sweet-toppings-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -368,18 +235,16 @@
             </div>
             <p class="text-sm text-red-600 mb-4">Selecione as coberturas adicionais para o seu tachitte doce.</p>
             <div id="sweet-toppings-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-                <!-- Toppings doces serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
             <div class="border-t pt-4">
                 <button id="add-sweet-toppings-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Adicionar ao Carrinho
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Novo Modal para Toppings Salgados -->
     <div id="toppings-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -395,18 +260,16 @@
             </div>
             <p class="text-sm text-red-600 mb-4">Selecione as coberturas adicionais para o seu tachitte.</p>
             <div id="toppings-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-                <!-- Toppings serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
             <div class="border-t pt-4">
                 <button id="add-toppings-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Adicionar ao Carrinho
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Novo Modal para Escolha de Sabor do Refrigerante -->
     <div id="soda-choice-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-sm">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -421,18 +284,16 @@
                 </button>
             </div>
             <div id="soda-flavors-list" class="space-y-4">
-                <!-- Sabores de refrigerante serão inseridos aqui via JS -->
-            </div>
+                </div>
             <div class="border-t pt-4 mt-4">
                 <button id="add-soda-flavor-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Adicionar ao Carrinho
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Customização do Tachitte -->
     <div id="customize-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -448,18 +309,16 @@
             </div>
             <p class="text-sm text-red-600 mb-4">Selecione até 5 ingredientes para o seu Tachitte customizado.</p>
             <div id="ingredients-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-                <!-- Ingredientes serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
             <div class="border-t pt-4">
                 <button id="next-custom-toppings-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Próximo
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Novo Modal para Molhos do Customizado -->
     <div id="custom-toppings-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -475,18 +334,16 @@
             </div>
             <p class="text-sm text-red-600 mb-4">Selecione até 2 molhos para o seu tachitte customizado.</p>
             <div id="custom-toppings-list" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-                <!-- Molhos serão inseridos aqui pelo JavaScript -->
-            </div>
+                </div>
             <div class="border-t pt-4">
                 <button id="add-custom-final-button"
-                    class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors">
+                    class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Adicionar ao Carrinho
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Novo Modal de Pagamento e Envio -->
     <div id="checkout-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -516,7 +373,7 @@
                                 <div class="flex flex-col items-center">
                                     <div id="qrcode-pix" class="p-2 bg-white rounded-md"></div>
                                     <button id="copy-pix-key"
-                                        class="mt-2 text-sm text-white bg-red-500 hover:bg-red-600 py-1 px-3 rounded-full">
+                                        class="mt-2 text-sm text-white bg-red-500 hover:bg-red-600 py-1 px-3 rounded-lg">
                                         Copiar Chave Pix
                                     </button>
                                 </div>
@@ -589,7 +446,7 @@
                 </div>
                 <div class="border-t pt-4">
                     <button id="send-whatsapp-button"
-                        class="w-full bg-red-500 text-white py-3 rounded-full font-bold hover:bg-red-600 transition-colors btn-animate">
+                        class="w-full bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors btn-animate">
                         Enviar Pedido por WhatsApp
                     </button>
                 </div>
@@ -597,7 +454,6 @@
         </div>
     </div>
 
-    <!-- Novo Modal para Customização de Combo -->
     <div id="combo-customize-modal" class="modal fixed inset-0 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-lg p-6 shadow-xl w-full max-w-lg overflow-y-auto hide-scrollbar max-h-[90vh]">
             <div class="flex justify-between items-center border-b pb-4 mb-4">
@@ -615,15 +471,15 @@
             </div>
             <div class="border-t pt-4 mt-4 flex justify-between">
                 <button id="combo-back-button"
-                    class="bg-gray-300 text-gray-800 py-2 px-4 rounded-lg font-bold hover:bg-gray-400 transition-colors hidden">
+                    class="bg-gray-300 text-gray-800 py-3 px-4 rounded-lg font-bold hover:bg-gray-400 transition-colors hidden">
                     Voltar
                 </button>
                 <button id="combo-next-button"
-                    class="bg-red-500 text-white py-2 px-4 rounded-lg font-bold hover:bg-red-600 transition-colors">
+                    class="bg-red-500 text-white py-3 px-4 rounded-lg font-bold hover:bg-red-600 transition-colors">
                     Próximo
                 </button>
                 <button id="add-combo-to-cart-button"
-                    class="bg-red-500 text-white py-3 rounded-xl font-bold hover:bg-red-600 transition-colors hidden">
+                    class="bg-red-500 text-white py-3 rounded-lg font-bold hover:bg-red-600 transition-colors hidden">
                     Adicionar ao Carrinho
                 </button>
             </div>
