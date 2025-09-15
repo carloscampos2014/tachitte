@@ -54,7 +54,12 @@ const state = {
     selectedProtein: null,
     selectedToppings: [],
     selectedSweetToppings: [],
-    selectedSodaFlavor: null
+    selectedSodaFlavor: null,
+
+    // --- Novos para combos ---
+    customizingCombo: false,
+    comboSteps: [],
+    currentComboStep: 0,
 };
 
 // Seletores do DOM
@@ -89,6 +94,16 @@ const changeValueP = document.getElementById('change-value');
 const pixInfoContainer = document.getElementById('pix-info-container');
 const qrcodePixDiv = document.getElementById('qrcode-pix');
 const copyPixKeyButton = document.getElementById('copy-pix-key');
+
+
+// Seletores do modal de combos
+const comboCustomizeModal = document.getElementById('combo-customize-modal');
+const comboCustomizeTitle = document.getElementById('combo-customize-title');
+const comboCustomizeSteps = document.getElementById('combo-customize-steps');
+const closeComboCustomizeModal = document.getElementById('close-combo-customize-modal');
+const comboBackButton = document.getElementById('combo-back-button');
+const comboNextButton = document.getElementById('combo-next-button');
+const addComboToCartButton = document.getElementById('add-combo-to-cart-button');
 
 // Novos seletores para os novos modais
 const sizeChoiceModal = document.getElementById('size-choice-modal');
@@ -184,13 +199,15 @@ function renderIngredients() {
 
 // Função para renderizar as opções de tamanho
 function renderSizes() {
-    sizeOptionsDiv.innerHTML = menuData.sizes.map(size => `
+    const html = menuData.sizes.map(size => `
                 <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
                     <input type="radio" name="size" data-id="${size.id}" data-name="${size.name}" data-price="${size.price}" class="size-radio rounded text-red-500 focus:ring-red-500">
                     <span class="text-sm">${size.name} ${size.description}</span>
                     <span class="text-sm text-red-600 ml-auto">${size.price > 0 ? `+R$ ${size.price.toFixed(2)}` : 'Grátis'}</span>
                 </label>
             `).join('');
+    sizeOptionsDiv.innerHTML = html;
+    return html;
 }
 
 // Função para renderizar as opções de toppings salgados
@@ -228,12 +245,14 @@ function renderCustomToppings() {
 
 // Função para renderizar as opções de sabor de refrigerante
 function renderSodaFlavors() {
-    sodaFlavorsListDiv.innerHTML = menuData.sodaFlavors.map(flavor => `
+    const html = menuData.sodaFlavors.map(flavor => `
                 <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
-                    <input type="radio" name="soda-flavor" data-id="${flavor.id}" data-name="${flavor.name}" data-price="${flavor.price}" class="soda-flavor-radio rounded text-red-500 focus:ring-red-500">
+                    <input type="radio" name="soda-flavor" data-name="${flavor.name}" class="soda-flavor-radio rounded text-red-500 focus:ring-red-500">
                     <span class="text-sm">${flavor.name}</span>
                 </label>
             `).join('');
+    sodaFlavorsListDiv.innerHTML = html;
+    return html;
 }
 
 // Atualiza a visualização do carrinho (itens e total)
@@ -378,6 +397,75 @@ function generatePixQRCode(amount) {
     new QRCode(qrcodePixDiv, payload);
 }
 
+// Atualiza a view do modal de combo
+function updateComboModalView() {
+    const comboCustomizeSteps = document.getElementById('combo-customize-steps');
+    const comboCustomizeTitle = document.getElementById('combo-customize-title');
+    const comboBackButton = document.getElementById('combo-back-button');
+    const comboNextButton = document.getElementById('combo-next-button');
+    const addComboToCartButton = document.getElementById('add-combo-to-cart-button');
+
+    comboCustomizeSteps.innerHTML = '';
+    comboNextButton.classList.remove('hidden');
+    addComboToCartButton.classList.add('hidden');
+    comboBackButton.classList.add('hidden');
+
+    if (state.currentComboStep > 0) {
+        comboBackButton.classList.remove('hidden');
+    }
+
+    if (state.currentComboStep === state.comboSteps.length - 1) {
+        comboNextButton.classList.add('hidden');
+        addComboToCartButton.classList.remove('hidden');
+    }
+
+    const currentStep = state.comboSteps[state.currentComboStep];
+    let content = '';
+
+    if (currentStep.type === 'size') {
+        comboCustomizeTitle.textContent = `Personalizar Combo: ${state.selectedItem.name} - Escolha o Tamanho do Tachitte`;
+        content = renderSizes();
+    } else if (currentStep.type === 'protein') {
+        comboCustomizeTitle.textContent = `Personalizar Combo: ${state.selectedItem.name} - Escolha a Proteína do Tachitte`;
+        content = `
+            <p class="text-sm text-red-600 mb-4">Escolha entre Peixe, Carne e Frango.</p>
+            <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                    <input type="radio" name="protein" id="protein-peixe" value="Peixe" class="accent-red-500">
+                    <label for="protein-peixe" class="text-lg">Peixe</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" name="protein" id="protein-carne" value="Carne" class="accent-red-500">
+                    <label for="protein-carne" class="text-lg">Carne</label>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <input type="radio" name="protein" id="protein-frango" value="Frango" class="accent-red-500">
+                    <label for="protein-frango" class="text-lg">Frango</label>
+                </div>
+            </div>
+        `;
+    } else if (currentStep.type === 'toppings') {
+        comboCustomizeTitle.textContent = `Personalizar Combo: ${state.selectedItem.name} - Escolha os Molhos`;
+        content = `
+            <p class="text-sm text-red-600 mb-4">Selecione os molhos adicionais para o seu tachitte.</p>
+            <div id="toppings-list-combo" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+                ${menuData.toppings.map(topping => `
+                    <label class="flex items-center space-x-2 p-2 border border-red-300 rounded-md cursor-pointer hover:bg-red-50 transition-colors">
+                        <input type="checkbox" data-id="${topping.id}" data-name="${topping.name}" data-price="${topping.price}" class="topping-checkbox rounded text-red-500 focus:ring-red-500">
+                        <span class="text-sm">${topping.name}</span>
+                        <span class="text-sm text-red-600 ml-auto">+R$ ${topping.price.toFixed(2)}</span>
+                    </label>
+                `).join('')}
+            </div>
+        `;
+    } else if (currentStep.type === 'soda-flavor') {
+        comboCustomizeTitle.textContent = `Personalizar Combo: ${state.selectedItem.name} - Escolha o Sabor do Refrigerante`;
+        content = renderSodaFlavors();
+    }
+    
+    comboCustomizeSteps.innerHTML = content;
+}
+
 // Manipuladores de eventos
 document.addEventListener('click', (e) => {
     // Adicionar ao carrinho
@@ -388,20 +476,46 @@ document.addEventListener('click', (e) => {
 
         state.selectedItem = item;
 
-        // Fluxo de personalização
-        if (item.canCustomize) {
+        // Limpa o estado de personalização anterior
+        state.selectedSize = null;
+        state.selectedProtein = null;
+        state.selectedToppings = [];
+        state.selectedSweetToppings = [];
+        state.selectedSodaFlavor = null;
+
+        console.log(state.selectedItem.name);
+
+        // Localize este trecho no seu arquivo app-meu.js
+        if (state.selectedItem.canCustomize) {
             renderSizes();
             sizeChoiceModal.classList.remove('hidden');
-        } else if (item.isCustom) {
+        } else if (state.selectedItem.isCustom) {
             // O item customizado também começa com a escolha de tamanho
             renderSizes();
             sizeChoiceModal.classList.remove('hidden');
-        } else if (item.type === 'refri' && item.canChooseFlavor) {
+        } else if (state.selectedItem.type === 'refri' && state.selectedItem.canChooseFlavor) {
             renderSodaFlavors();
             sodaChoiceModal.classList.remove('hidden');
+        } else if (state.selectedItem.type === 'combo') {
+            state.customizingCombo = true;
+            state.comboSteps = [];
+
+            // Adiciona os passos de personalização baseados no combo
+            state.comboSteps.push({ type: 'size' });
+            if (item.comboItems.tachitte.canChooseProtein) {
+                state.comboSteps.push({ type: 'protein' });
+            }
+            state.comboSteps.push({ type: 'toppings' });
+            if (item.comboItems.bebida.type === 'refri' && item.comboItems.bebida.canChooseFlavor) {
+                state.comboSteps.push({ type: 'soda-flavor' });
+            }
+
+            state.currentComboStep = 0;
+            updateComboModalView();
+            comboCustomizeModal.classList.remove('hidden');
         } else {
-            if (item) {
-                addItemToCart(item);
+            if (state.selectedItem) {
+                addItemToCart(state.selectedItem);
             }
         }
     }
@@ -418,8 +532,10 @@ document.addEventListener('click', (e) => {
             price: parseFloat(selectedSize.dataset.price)
         };
         sizeChoiceModal.classList.add('hidden');
-
-        if (state.selectedItem.type === 'salty') {
+        if (state.selectedItem.name === 'Vegano' && state.selectedItem.type === 'salty') {
+            renderToppings();
+            toppingsChoiceModal.classList.remove('hidden');
+        } else if (state.selectedItem.type === 'salty') {
             proteinChoiceModal.classList.remove('hidden');
         } else if (state.selectedItem.type === 'sweet') {
             renderSweetToppings();
@@ -463,7 +579,6 @@ document.addEventListener('click', (e) => {
         customToppingsModal.classList.remove('hidden');
     }
 
-
     // Finalizar personalização e adicionar ao carrinho (Tachitte Salgado)
     if (e.target.closest('#add-toppings-button')) {
         state.selectedToppings = Array.from(document.querySelectorAll('.topping-checkbox:checked')).map(cb => ({
@@ -476,7 +591,12 @@ document.addEventListener('click', (e) => {
         // Ajustar nome, descrição e preço com base nas escolhas
         finalItem.name = `${finalItem.name} (${state.selectedSize.name})`;
         finalItem.price += state.selectedSize.price;
-        finalItem.name += ` (com ${state.selectedProtein})`;
+
+        finalItem.selectedSize = state.selectedSize;
+        if (state.selectedProtein) {
+            finalItem.name += ` (com ${state.selectedProtein})`;
+            finalItem.selectedProtein = state.selectedProtein;
+        }
 
         if (state.selectedToppings.length > 0) {
             finalItem.name += ` + Toppings`;
@@ -485,8 +605,6 @@ document.addEventListener('click', (e) => {
             });
         }
 
-        finalItem.selectedSize = state.selectedSize;
-        finalItem.selectedProtein = state.selectedProtein;
         finalItem.selectedToppings = state.selectedToppings;
 
         addItemToCart(finalItem);
@@ -594,6 +712,112 @@ document.addEventListener('click', (e) => {
 
         addItemToCart(newItem);
         sodaChoiceModal.classList.add('hidden');
+        state.selectedItem = null;
+    }
+
+
+    // Navegação do modal de combo (Próximo)
+    if (e.target.closest('#combo-next-button')) {
+        const currentStep = state.comboSteps[state.currentComboStep];
+        let valid = false;
+
+        if (currentStep.type === 'size') {
+            const selected = document.querySelector('input[name="size"]:checked');
+            if (selected) {
+                state.selectedSize = { name: selected.dataset.name, price: parseFloat(selected.dataset.price) };
+                valid = true;
+            } else showStatusMessage('Selecione um tamanho.', 'error');
+        }
+        if (currentStep.type === 'protein') {
+            const selected = document.querySelector('input[name="protein"]:checked');
+            if (selected) {
+                state.selectedProtein = selected.value;
+                valid = true;
+            } else showStatusMessage('Selecione uma proteína.', 'error');
+        }
+        if (currentStep.type === 'toppings') {
+            state.selectedToppings = Array.from(document.querySelectorAll('#combo-customize-steps .topping-checkbox:checked'))
+                .map(cb => ({ name: cb.dataset.name, price: parseFloat(cb.dataset.price) }));
+            valid = true;
+        }
+        if (currentStep.type === 'soda-flavor') {
+            const selected = document.querySelector('input[name="soda-flavor"]:checked');
+            if (selected) {
+                state.selectedSodaFlavor = { name: selected.dataset.name };
+                valid = true;
+            } else showStatusMessage('Selecione um sabor.', 'error');
+        }
+
+        if (valid) {
+            state.currentComboStep++;
+            updateComboModalView();
+        }
+    }
+
+    // Voltar no combo
+    if (e.target.closest('#combo-back-button')) {
+        state.currentComboStep--;
+        updateComboModalView();
+    }
+
+    // Finalizar combo
+    if (e.target.closest('#add-combo-to-cart-button')) {
+        // Validação extra: se o último passo for refrigerante, garantir seleção
+        if (state.comboSteps[state.currentComboStep].type === 'soda-flavor') {
+            const selectedFlavor = document.querySelector('input[name="soda-flavor"]:checked');
+            if (!selectedFlavor) {
+                showStatusMessage('Por favor, selecione o sabor do refrigerante.', 'error');
+                return;
+            }
+            state.selectedSodaFlavor = { name: selectedFlavor.dataset.name };
+        }
+
+        const combo = state.selectedItem;
+        let price = combo.price;
+        let details = '';
+
+        if (state.selectedSize) {
+            price += state.selectedSize.price;
+            details += `Tamanho: ${state.selectedSize.name}, `;
+        }
+        if (state.selectedProtein) details += `Proteína: ${state.selectedProtein}, `;
+        if (state.selectedToppings.length > 0) {
+            state.selectedToppings.forEach(t => price += t.price);
+            details += `Molhos: ${state.selectedToppings.map(t => t.name).join(', ')}, `;
+        }
+        if (state.selectedSodaFlavor) details += `Bebida: ${state.selectedSodaFlavor.name}`;
+
+        const finalCombo = {
+            ...combo,
+            price,
+            quantity: 1,
+            description: details,
+            customization: {
+                size: state.selectedSize,
+                protein: state.selectedProtein,
+                toppings: state.selectedToppings,
+                bebida: state.selectedSodaFlavor
+            }
+        };
+
+        addItemToCart(finalCombo);
+
+        // reset
+        state.customizingCombo = false;
+        state.selectedItem = null;
+        state.selectedSize = null;
+        state.selectedProtein = null;
+        state.selectedToppings = [];
+        state.selectedSodaFlavor = null;
+        state.comboSteps = [];
+        state.currentComboStep = 0;
+
+        comboCustomizeModal.classList.add('hidden');
+    }
+
+    // Fechar combo
+    if (e.target.closest('#close-combo-customize-modal')) {
+        comboCustomizeModal.classList.add('hidden');
         state.selectedItem = null;
     }
 

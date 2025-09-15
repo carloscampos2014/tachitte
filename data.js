@@ -7,7 +7,7 @@ export const menuData = {
         { id: 't3', name: 'Pepperone', description: 'Um toque picante e defumado com a nossa receita padrão e generosas fatias de pepperoni.', price: 18.00, img: 'images/pepperone.png', type: 'salty', canCustomize: true },
         { id: 't4', name: 'Salsicha', description: 'Saboroso e reconfortante: o tachitte tradicional com fatias de salsicha.', price: 17.00, img: 'images/salsicha.png', type: 'salty', canCustomize: true },
         { id: 't5', name: 'Queijo', description: 'Para os amantes de queijo: a receita padrão com mussarela derretida e picada por toda parte.', price: 17.00, img: 'images/queijo.png', type: 'salty', canCustomize: true },
-        { id: 't6', name: 'Vegano', description: 'Nossa opção deliciosa e 100% à base de plantas. Leva arroz integral, algas, cenoura e tofu no lugar da proteína animal.', price: 19.00, img: 'images/vegano.png', type: 'salty', canCustomize: false },
+        { id: 't6', name: 'Vegano', description: 'Nossa opção deliciosa e 100% à base de plantas. Leva arroz integral, algas, cenoura e tofu no lugar da proteína animal.', price: 19.00, img: 'images/vegano.png', type: 'salty', canCustomize: true },
         
         // Adicionada a propriedade canCustomize para os tachittes doces
         { id: 't7', name: 'Romeu e Julieta', description: 'Um clássico reinventado! A base de tachitte salgada encontra a doçura da goiabada e o sabor suave do queijo mussarela.', price: 16.00, img: 'images/romeu-e-julieta.png', type: 'sweet', canCustomize: true },
